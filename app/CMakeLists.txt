@@ -32,6 +32,7 @@ target_link_libraries( NativeMain
                        appGlue
                        android
                        log
+                       cpufeatures
                        )
 ######################################################################  NativeMain
 
@@ -43,4 +44,21 @@ add_subdirectory(libs/ogredeps)
 
 ######################################################################  Ogre
 add_subdirectory(libs/ogre)
+
+set(OGRE_NATIVE_INCLUDE
+    ${OGRE_SOURCE_DIR}/OgreMain/include
+    ${OGRE_SOURCE_DIR}/PlugIns/ParticleFX/include
+    ${OGRE_SOURCE_DIR}/RenderSystems/GLES2/include
+    ${OGRE_BINARY_DIR}/include
+    )
+
+target_link_libraries( NativeMain
+                       OgreMain
+                       RenderSystem_GLES2
+                       OIS
+                        )
+
+target_include_directories(NativeMain PRIVATE
+                            ${OGRE_NATIVE_INCLUDE}
+                            )
 ######################################################################  Ogre
