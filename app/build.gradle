@@ -10,9 +10,46 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilter 'x86'
+        }
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++11 -frtti -fexceptions"
+                arguments "-DANDROID_STL=c++_static","-DANDROID_ARM_MODE=arm",
+                        "-DOGRE_ASSERT_MODE:STRING=0",
+                        "-DOGRE_BUILD_COMPONENT_MESHLODGENERATOR:BOOL=ON",
+                        "-DOGRE_BUILD_COMPONENT_OVERLAY:BOOL=ON",
+                        "-DOGRE_BUILD_COMPONENT_PAGING:BOOL=OFF",
+                        "-DOGRE_BUILD_COMPONENT_RTSHADERSYSTEM:BOOL=OFF",
+                        "-DOGRE_BUILD_COMPONENT_TERRAIN:BOOL=OFF",
+                        "-DOGRE_BUILD_COMPONENT_VOLUME:BOOL=OFF",
+                        "-DOGRE_BUILD_PLATFORM_NACL:BOOL=OFF",
+                        "-DOGRE_BUILD_PLUGIN_PFX:BOOL=ON",
+                        "-DOGRE_BUILD_SAMPLES:BOOL=OFF",
+                        "-DOGRE_BUILD_TESTS:BOOL=OFF",
+                        "-DOGRE_BUILD_TOOLS:BOOL=OFF",
+                        "-DOGRE_BUILD_SAMPLES:BOOL=OFF",
+                        "-DOGRE_CONFIG_ALLOCATOR:STRING=1",
+                        "-DOGRE_CONFIG_CONTAINERS_USE_CUSTOM_ALLOCATOR:BOOL=OFF",
+                        "-DOGRE_CONFIG_DOUBLE:BOOL=OFF",
+                        "-DOGRE_CONFIG_ENABLE_DDS:BOOL=OFF",
+                        "-DOGRE_CONFIG_ENABLE_ETC:BOOL=FALSE",
+                        "-DOGRE_CONFIG_ENABLE_GLES2_CG_SUPPORT:BOOL=OFF",
+                        "-DOGRE_CONFIG_ENABLE_GLES2_VAO_SUPPORT:BOOL=ON",
+                        "-DOGRE_CONFIG_ENABLE_GLES3_SUPPORT:BOOL=OFF",
+                        "-DOGRE_CONFIG_ENABLE_GL_STATE_CACHE_SUPPORT:BOOL=OFF",
+                        "-DOGRE_CONFIG_ENABLE_MESHLOD:BOOL=TRUE",
+                        "-DOGRE_CONFIG_ENABLE_PVRTC:BOOL=FALSE",
+                        "-DOGRE_CONFIG_ENABLE_TBB_SCHEDULER:BOOL=OFF",
+                        "-DOGRE_CONFIG_ENABLE_ZIP:BOOL=ON",
+                        "-DOGRE_CONFIG_MEMTRACK_DEBUG:BOOL=OFF",
+                        "-DOGRE_CONFIG_MEMTRACK_RELEASE:BOOL=OFF",
+                        "-DOGRE_CONFIG_STRING_USE_CUSTOM_ALLOCATOR:BOOL=OFF",
+                        "-DOGRE_LEGACY_ANIMATIONS:BOOL=ON",
+                        "-DOGRE_RESTRICT_ALIASING:BOOL=ON",
+                        "-DOGRE_SIMD_NEON:BOOL=OFF",
+                        "-DOGRE_SIMD_SSE2:BOOL=OFF"
             }
         }
     }
