@@ -1,4 +1,4 @@
-material Mat/Base
+material Mat/Base/Color
 {
 	technique
 	{
@@ -7,9 +7,31 @@ material Mat/Base
 			vertex_program_ref VP/Base
 			{
 			}
-			fragment_program_ref FP/Base
+			fragment_program_ref FP/Base/Color
 			{
 				param_named_auto colour surface_diffuse_colour
+			}
+		}
+	}
+}
+
+material Mat/Base/Tex
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture GreenSkin.jpg
+			}
+			
+			vertex_program_ref VP/Base
+			{
+			}
+			fragment_program_ref FP/Base/Tex
+			{
+				
 			}
 		}
 	}

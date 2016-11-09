@@ -14,6 +14,14 @@ material Ogre/Earring
 				colour_op_multipass_fallback one one
 				env_map spherical
 			}
+			
+			vertex_program_ref VP/Base
+			{
+			}
+			fragment_program_ref FP/Base/Tex
+			{
+				
+			}
 		}
 	}
 }
@@ -30,6 +38,14 @@ material Ogre/Skin
 			{
 				texture GreenSkin.jpg
 				tex_address_mode mirror
+			}
+			
+			vertex_program_ref VP/Base
+			{
+			}
+			fragment_program_ref FP/Base/Tex
+			{
+				
 			}
 		}
 	}
@@ -48,6 +64,14 @@ material Ogre/Tusks
 				texture tusk.jpg
 				scale 0.2 0.2
 			}
+			
+			vertex_program_ref VP/Base
+			{
+			}
+			fragment_program_ref FP/Base/Tex
+			{
+				
+			}
 		}
 	}
 }
@@ -61,6 +85,14 @@ material Ogre/Eyes
 			ambient 1 0.4 0.4
 			diffuse 1 0.7 0
 			emissive 0.3 0.1 0
+		}
+		
+		vertex_program_ref VP/Base
+		{
+		}
+		fragment_program_ref FP/Base/Color
+		{
+			
 		}
 	}
 }

@@ -66,6 +66,7 @@ public:
 					{
 						auto smgr = Ogre::Root::getSingletonPtr()->createSceneManager(Ogre::ST_GENERIC, 1, Ogre::INSTANCING_CULLING_SINGLETHREAD, "DummyScene");
 						auto camera = smgr->createCamera("MainCamera");
+						camera->setAutoAspectRatio(true);
 						auto comMgr = Ogre::Root::getSingletonPtr()->getCompositorManager2();
 						comMgr->createBasicWorkspaceDef("DummyWorkspaceDef", Ogre::ColourValue(.6f, 0.6f, .6f), {});
 						auto workspace = comMgr->addWorkspace(smgr, imp_.MainWnd_, camera, "DummyWorkspaceDef", true);
@@ -74,11 +75,11 @@ public:
 						auto lightNode = smgr->getRootSceneNode()->createChildSceneNode();
 						lightNode->setPosition({20.f, 80.f, 50.f});
 
-						auto testMat = Ogre::MaterialManager::getSingletonPtr()->getByName("Mat/Base");
+						auto testMat = Ogre::MaterialManager::getSingletonPtr()->getByName("Mat/Base/Tex");
 						testMat->setDiffuse(1.f, 0.f, 0.f, 0.f);
 
 						auto head = smgr->createEntity("ogrehead.mesh");
-						//head->setMaterial(testMat);
+						head->setMaterial(testMat);
 
 						auto headNode = smgr->getRootSceneNode()->createChildSceneNode();
 						headNode->attachObject(head);

@@ -14,13 +14,29 @@ vertex_program VP/Base unified
 	delegate VP/Base/GLSLES
 }
 
-fragment_program FP/Base/GLSLES glsles
+fragment_program FP/Base/Color/GLSLES glsles
 {
-	source BaseFP.glsles
+	source BaseColorFP.glsles
 	profiles glsles
 }
 
-fragment_program FP/Base unified
+fragment_program FP/Base/Color unified
 {
-	delegate FP/Base/GLSLES
+	delegate FP/Base/Color/GLSLES
+}
+
+fragment_program FP/Base/Tex/GLSLES glsles
+{
+	source BaseTexFP.glsles
+	profiles glsles
+	
+	default_params
+    {
+        param_named diffuseTex 0
+    }
+}
+
+fragment_program FP/Base/Tex unified
+{
+	delegate FP/Base/Tex/GLSLES
 }
