@@ -1,0 +1,16 @@
+material Mat/Base
+{
+	technique
+	{
+		pass
+		{
+			vertex_program_ref VP/Base
+			{
+			}
+			fragment_program_ref FP/Base
+			{
+				param_named_auto colour surface_diffuse_colour
+			}
+		}
+	}
+}

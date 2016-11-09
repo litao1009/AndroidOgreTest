@@ -1,0 +1,12 @@
+#version 100
+
+attribute vec4 uv0;
+attribute vec4 position;
+attribute vec3 normal;
+
+uniform mat4 worldViewProjMatrix;
+
+void main()
+{
+	gl_Position = worldViewProjMatrix * position;
+}

@@ -22,8 +22,18 @@ target_include_directories(cpufeatures PRIVATE
 
 
 ######################################################################  NativeMain
+set( NATIVE_SOURCE_DIR
+     src/main/cpp
+     )
+
+set( NATIVE_SOURCE
+    ${NATIVE_SOURCE_DIR}/NativeMain.cpp
+    ${NATIVE_SOURCE_DIR}/AndroidBridge.h
+    ${NATIVE_SOURCE_DIR}/AndroidBridge.cpp
+    )
+
 add_library( NativeMain SHARED
-             src/main/cpp/NativeMain.cpp )
+             ${NATIVE_SOURCE} )
 
 target_include_directories(NativeMain PRIVATE
                            ${APP_GLUE_DIR})
@@ -49,6 +59,7 @@ set(OGRE_NATIVE_INCLUDE
     ${OGRE_SOURCE_DIR}/OgreMain/include
     ${OGRE_SOURCE_DIR}/PlugIns/ParticleFX/include
     ${OGRE_SOURCE_DIR}/RenderSystems/GLES2/include
+    ${OGRE_SOURCE_DIR}/RenderSystems/GLES2/include/EGL
     ${OGRE_BINARY_DIR}/include
     )
 

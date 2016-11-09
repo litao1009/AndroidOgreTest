@@ -1,0 +1,26 @@
+vertex_program VP/Base/GLSLES glsles
+{
+	source BaseVP.glsles
+	profiles glsles
+	
+	default_params
+    {
+        param_named_auto worldViewProjMatrix worldviewproj_matrix
+    }
+}
+
+vertex_program VP/Base unified
+{
+	delegate VP/Base/GLSLES
+}
+
+fragment_program FP/Base/GLSLES glsles
+{
+	source BaseFP.glsles
+	profiles glsles
+}
+
+fragment_program FP/Base unified
+{
+	delegate FP/Base/GLSLES
+}
