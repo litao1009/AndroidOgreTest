@@ -14,7 +14,7 @@
 #  FreeImage_INCLUDE_DIRS - the FreeImage include directories 
 #  FreeImage_LIBRARIES - link these to use FreeImage
 if (NOT TARGET FreeImage)
-message(WARNING "BBBBBBBBBBBBBBBBBBBB_FreeImage")
+
 include(FindPkgMacros)
 findpkg_begin(FreeImage)
 

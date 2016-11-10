@@ -24,14 +24,16 @@ material Mat/Base/Tex
 			texture_unit
 			{
 				texture GreenSkin.jpg
+				tex_address_mode mirror
 			}
 			
 			vertex_program_ref VP/Base
 			{
 			}
+			
 			fragment_program_ref FP/Base/Tex
 			{
-				
+				param_named diffuseTex int 0
 			}
 		}
 	}

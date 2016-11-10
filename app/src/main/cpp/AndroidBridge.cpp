@@ -79,7 +79,7 @@ public:
 						testMat->setDiffuse(1.f, 0.f, 0.f, 0.f);
 
 						auto head = smgr->createEntity("ogrehead.mesh");
-						head->setMaterial(testMat);
+//						head->setMaterial(testMat);
 
 						auto headNode = smgr->getRootSceneNode()->createChildSceneNode();
 						headNode->attachObject(head);

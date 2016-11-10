@@ -29,11 +29,6 @@ fragment_program FP/Base/Tex/GLSLES glsles
 {
 	source BaseTexFP.glsles
 	profiles glsles
-	
-	default_params
-    {
-        param_named diffuseTex 0
-    }
 }
 
 fragment_program FP/Base/Tex unified

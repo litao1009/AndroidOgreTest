@@ -33,6 +33,7 @@ android {
                         "-DOGRE_CONFIG_ALLOCATOR:STRING=1",
                         "-DOGRE_CONFIG_CONTAINERS_USE_CUSTOM_ALLOCATOR:BOOL=OFF",
                         "-DOGRE_CONFIG_DOUBLE:BOOL=OFF",
+                        "-DOGRE_CONFIG_ENABLE_FREEIMAGE:BOOL=ON",
                         "-DOGRE_CONFIG_ENABLE_DDS:BOOL=OFF",
                         "-DOGRE_CONFIG_ENABLE_ETC:BOOL=FALSE",
                         "-DOGRE_CONFIG_ENABLE_GLES2_CG_SUPPORT:BOOL=OFF",

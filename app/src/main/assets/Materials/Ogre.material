@@ -85,14 +85,14 @@ material Ogre/Eyes
 			ambient 1 0.4 0.4
 			diffuse 1 0.7 0
 			emissive 0.3 0.1 0
-		}
-		
-		vertex_program_ref VP/Base
-		{
-		}
-		fragment_program_ref FP/Base/Color
-		{
 			
+			vertex_program_ref VP/Base
+			{
+			}
+			fragment_program_ref FP/Base/Color
+			{
+				
+			}
 		}
 	}
 }
