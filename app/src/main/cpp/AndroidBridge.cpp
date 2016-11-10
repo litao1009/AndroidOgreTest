@@ -71,16 +71,15 @@ public:
 						comMgr->createBasicWorkspaceDef("DummyWorkspaceDef", Ogre::ColourValue(.6f, 0.6f, .6f), {});
 						auto workspace = comMgr->addWorkspace(smgr, imp_.MainWnd_, camera, "DummyWorkspaceDef", true);
 
-						smgr->setAmbientLight(Ogre::ColourValue(.3f, .3f, .3f));
+						auto light = smgr->createLight();
+						smgr->setAmbientLight(Ogre::ColourValue(1.f, 1.f, 1.f));
 						auto lightNode = smgr->getRootSceneNode()->createChildSceneNode();
 						lightNode->setPosition({20.f, 80.f, 50.f});
-
-						auto testMat = Ogre::MaterialManager::getSingletonPtr()->getByName("Mat/Base/Tex");
-						testMat->setDiffuse(1.f, 0.f, 0.f, 0.f);
+						lightNode->attachObject(light);
+						light->setDirection({-1.f, -1.f, -1.f});
+						light->setDiffuseColour(1.f, 1.f, 1.f);
 
 						auto head = smgr->createEntity("ogrehead.mesh");
-//						head->setMaterial(testMat);
-
 						auto headNode = smgr->getRootSceneNode()->createChildSceneNode();
 						headNode->attachObject(head);
 						headNode->setPosition({0.f, 0.f, 0.f});
@@ -90,8 +89,8 @@ public:
 						camNode->attachObject(camera);
 						//camNode->setPosition({0.f, 0.f, 100.f});
 						//camNode->setDirection({0.f, 0.f, -1.f});
+						camera->setPosition(30.f, 90.f, 150.f);
 						camera->lookAt({0.f, 0.f, 0.f});
-						camera->setPosition(0.f, 0.f, 100.f);
 						camera->setNearClipDistance(10.f);
 						camera->setFarClipDistance(1000.f);
 					}

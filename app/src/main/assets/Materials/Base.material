@@ -9,7 +9,7 @@ material Mat/Base/Color
 			}
 			fragment_program_ref FP/Base/Color
 			{
-				param_named_auto colour surface_diffuse_colour
+				
 			}
 		}
 	}

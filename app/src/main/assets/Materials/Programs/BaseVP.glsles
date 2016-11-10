@@ -1,15 +1,21 @@
 #version 100
 
 uniform mat4 worldViewProjMatrix;
+uniform mat4 worldMatrix;
+uniform mat4 textureMatrix;
 
 attribute vec4 vertex;
 attribute vec3 normal;
 attribute vec4 uv0;
 
 varying vec4 oUv;
+varying vec3 oNormal;
+varying vec3 oPosition;
 
 void main()
 {
 	gl_Position = worldViewProjMatrix * vertex;
-	oUv = uv0;
+	oUv = textureMatrix * uv0;
+	oNormal = normal;
+	oPosition = (worldMatrix * vertex).xyz;
 }

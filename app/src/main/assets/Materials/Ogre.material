@@ -18,9 +18,9 @@ material Ogre/Earring
 			vertex_program_ref VP/Base
 			{
 			}
-			fragment_program_ref FP/Base/Tex
+			fragment_program_ref FP/Base/Light
 			{
-				
+				param_named diffuseTex int 0
 			}
 		}
 	}
@@ -43,9 +43,9 @@ material Ogre/Skin
 			vertex_program_ref VP/Base
 			{
 			}
-			fragment_program_ref FP/Base/Tex
+			fragment_program_ref FP/Base/Light
 			{
-				
+				param_named diffuseTex int 0
 			}
 		}
 	}
@@ -68,9 +68,9 @@ material Ogre/Tusks
 			vertex_program_ref VP/Base
 			{
 			}
-			fragment_program_ref FP/Base/Tex
+			fragment_program_ref FP/Base/Light
 			{
-				
+				param_named diffuseTex int 0
 			}
 		}
 	}

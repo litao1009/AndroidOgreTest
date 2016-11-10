@@ -1,10 +1,12 @@
 #version 100
 
-uniform vec4 colour;
+uniform sampler2D diffuseTex;
+
 uniform mat4 worldMatrix;
 uniform vec3 lightPosition;
 uniform vec4 lightDiffuse;
 
+varying vec4 oUv;
 varying vec3 oNormal;
 varying vec3 oPosition;
 
@@ -13,6 +15,5 @@ void main()
 	vec3 worldNormal = mat3(worldMatrix) * oNormal;
 	vec3 lightDir = normalize(lightPosition - oPosition);
 	float factor = max(0, dot(worldNormal,lightDir));
-	
-	gl_FragColor = colour * factor;
+	gl_FragColor = texture2D(diffuseTex,oUv.st) * factor * lightDiffuse;
 }
