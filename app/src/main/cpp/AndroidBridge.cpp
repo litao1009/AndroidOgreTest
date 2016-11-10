@@ -122,7 +122,16 @@ public:
 
 	static int32_t	HandleInput(android_app* app, AInputEvent* evt)
 	{
+		if (AInputEvent_getType(evt) == AINPUT_EVENT_TYPE_MOTION)
+		{
+			int action = (int)(AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction(evt));
+		}
+		else
+		{
 
+		}
+
+		return 1;
 	}
 };
 
