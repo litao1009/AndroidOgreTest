@@ -27,16 +27,29 @@ set( NATIVE_SOURCE_DIR
      )
 
 set( NATIVE_SOURCE
+    ${NATIVE_SOURCE_DIR}/Camera/MayaCamera.cpp
+    ${NATIVE_SOURCE_DIR}/Camera/MayaCamera.h
     ${NATIVE_SOURCE_DIR}/NativeMain.cpp
-    ${NATIVE_SOURCE_DIR}/AndroidBridge.h
     ${NATIVE_SOURCE_DIR}/AndroidBridge.cpp
+    ${NATIVE_SOURCE_DIR}/AndroidBridge.h
+    ${NATIVE_SOURCE_DIR}/OgreEnv.cpp
+    ${NATIVE_SOURCE_DIR}/OgreEnv.h
+    ${NATIVE_SOURCE_DIR}/InputEvent.cpp
+    ${NATIVE_SOURCE_DIR}/InputEvent.h
+    ${NATIVE_SOURCE_DIR}/InputEventFwd.h
+    ${NATIVE_SOURCE_DIR}/IFrameListener.cpp
+    ${NATIVE_SOURCE_DIR}/IFrameListener.h
+    ${NATIVE_SOURCE_DIR}/IFrameListenerFwd.h
+    ${NATIVE_SOURCE_DIR}/ICameraFrameListener.cpp
+    ${NATIVE_SOURCE_DIR}/ICameraFrameListener.h
     )
 
 add_library( NativeMain SHARED
              ${NATIVE_SOURCE} )
 
 target_include_directories(NativeMain PRIVATE
-                           ${APP_GLUE_DIR})
+                           ${APP_GLUE_DIR}
+                           ${NATIVE_SOURCE_DIR})
 
 target_link_libraries( NativeMain
                        appGlue
@@ -61,6 +74,7 @@ set(OGRE_NATIVE_INCLUDE
     ${OGRE_SOURCE_DIR}/RenderSystems/GLES2/include
     ${OGRE_SOURCE_DIR}/RenderSystems/GLES2/include/EGL
     ${OGRE_BINARY_DIR}/include
+    ${OIS_INCLUDE_DIR}
     )
 
 target_link_libraries( NativeMain

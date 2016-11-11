@@ -7,12 +7,19 @@
 #include "Android/OgreAndroidEGLWindow.h"
 #include "Android/OgreAPKZipArchive.h"
 #include "Android/OgreAPKFileSystemArchive.h"
+#include "OIS.h"
+#include "OgreEnv.h"
+#include "InputEvent.h"
+
+#include <android/log.h>
+
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "AndroidBridge", __VA_ARGS__))
+#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "AndroidBridge", __VA_ARGS__))
 
 class	AndroidBridge::Imp
 {
 public:
 
-	std::unique_ptr<Ogre::Root>			Root_;
 	std::unique_ptr<Ogre::GLES2Plugin>	GLES2Plugin_;
 	android_app* 						AndroidApp_{};
 	Ogre::RenderWindow*					MainWnd_{};
@@ -122,13 +129,65 @@ public:
 
 	static int32_t	HandleInput(android_app* app, AInputEvent* evt)
 	{
-		if (AInputEvent_getType(evt) == AINPUT_EVENT_TYPE_MOTION)
-		{
-			int action = (int)(AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction(evt));
-		}
-		else
-		{
+		auto& imp_ = *(AndroidBridge::GetInstance().ImpUPtr_);
 
+		auto eventType = AInputEvent_getType(evt);
+
+		switch (eventType)
+		{
+			case AINPUT_EVENT_TYPE_MOTION:
+			{
+				PointerState ps;
+
+				auto source = AInputEvent_getSource(evt);
+				switch (source)
+				{
+					case AINPUT_SOURCE_TOUCHSCREEN:
+					{
+						auto action = AMotionEvent_getAction(evt);
+
+						ps.X.rel = AMotionEvent_getX(evt, 0);
+						ps.Y.rel = AMotionEvent_getY(evt, 0);
+						ps.X.abs = AMotionEvent_getRawX(evt, 0);
+						ps.Y.abs = AMotionEvent_getRawY(evt, 0);
+						ps.width = imp_.MainWnd_->getWidth();
+						ps.height = imp_.MainWnd_->getHeight();
+
+						switch (action)
+						{
+							case AMOTION_EVENT_ACTION_DOWN:
+							{
+								ps.State_ = PointerState::ES_Pressed;
+							}
+								break;
+							case AMOTION_EVENT_ACTION_UP:
+							{
+								ps.State_ = PointerState::ES_Released;
+							}
+								break;
+							case AMOTION_EVENT_ACTION_MOVE:
+							{
+								ps.State_ = PointerState::ES_Moved;
+							}
+								break;
+						}
+
+						OgreEnv::GetInstance().OnInputEvent(ps);
+					}
+						break;
+					case AINPUT_SOURCE_TRACKBALL:
+					{
+
+					}
+						break;
+				}
+			}
+				break;
+			case AINPUT_EVENT_TYPE_KEY:
+			{
+
+			}
+				break;
 		}
 
 		return 1;
@@ -157,8 +216,9 @@ void AndroidBridge::Init( android_app *state )
 
 	imp_.AndroidApp_ = state;
 
-	auto root = new Ogre::Root();
-	imp_.Root_.reset(root);
+	OgreEnv::GetInstance().Init();
+
+	auto root = Ogre::Root::getSingletonPtr();
 
 	auto gles2Plugin = new Ogre::GLES2Plugin();
 	root->installPlugin(gles2Plugin);
@@ -172,7 +232,8 @@ void AndroidBridge::Shutdown()
 {
 	auto& imp_ = *ImpUPtr_;
 
-	imp_.Root_.reset();
+	OgreEnv::GetInstance().UnInit();
+
 	imp_.GLES2Plugin_.reset();
 }
 
@@ -201,7 +262,7 @@ void AndroidBridge::Run()
 		if ( nullptr != imp_.MainWnd_ && imp_.MainWnd_->isActive() )
 		{
 			imp_.MainWnd_->windowMovedOrResized();
-			Ogre::Root::getSingletonPtr()->renderOneFrame();
+			OgreEnv::GetInstance().RenderOneFrame();
 		}
 	}
 }
