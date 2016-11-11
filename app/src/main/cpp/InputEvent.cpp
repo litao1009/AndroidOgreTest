@@ -83,7 +83,7 @@ void PointerRecoder::SetReleased()
 {
 	auto& imp_ = *ImpUPtr_;
 
-	imp_.Flags_.set(Imp::EF_Pressed);
+	imp_.Flags_.set(Imp::EF_Released);
 }
 
 bool PointerRecoder::HasMoved() const

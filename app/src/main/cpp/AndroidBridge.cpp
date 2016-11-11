@@ -11,6 +11,8 @@
 #include "OgreEnv.h"
 #include "InputEvent.h"
 
+#include "SceneListener/DummySceneListener.h"
+
 #include <android/log.h>
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "AndroidBridge", __VA_ARGS__))
@@ -69,38 +71,9 @@ public:
 					//load resources
 					Ogre::ResourceGroupManager::getSingletonPtr()->initialiseAllResourceGroups();
 
-					//dummp scene
-					{
-						auto smgr = Ogre::Root::getSingletonPtr()->createSceneManager(Ogre::ST_GENERIC, 1, Ogre::INSTANCING_CULLING_SINGLETHREAD, "DummyScene");
-						auto camera = smgr->createCamera("MainCamera");
-						camera->setAutoAspectRatio(true);
-						auto comMgr = Ogre::Root::getSingletonPtr()->getCompositorManager2();
-						comMgr->createBasicWorkspaceDef("DummyWorkspaceDef", Ogre::ColourValue(.6f, 0.6f, .6f), {});
-						auto workspace = comMgr->addWorkspace(smgr, imp_.MainWnd_, camera, "DummyWorkspaceDef", true);
-
-						auto light = smgr->createLight();
-						smgr->setAmbientLight(Ogre::ColourValue(1.f, 1.f, 1.f));
-						auto lightNode = smgr->getRootSceneNode()->createChildSceneNode();
-						lightNode->setPosition({20.f, 80.f, 50.f});
-						lightNode->attachObject(light);
-						light->setDirection({-1.f, -1.f, -1.f});
-						light->setDiffuseColour(1.f, 1.f, 1.f);
-
-						auto head = smgr->createEntity("ogrehead.mesh");
-						auto headNode = smgr->getRootSceneNode()->createChildSceneNode();
-						headNode->attachObject(head);
-						headNode->setPosition({0.f, 0.f, 0.f});
-
-						auto camNode = smgr->getRootSceneNode()->createChildSceneNode();
-						camera->detachFromParent();
-						camNode->attachObject(camera);
-						//camNode->setPosition({0.f, 0.f, 100.f});
-						//camNode->setDirection({0.f, 0.f, -1.f});
-						camera->setPosition(30.f, 90.f, 150.f);
-						camera->lookAt({0.f, 0.f, 0.f});
-						camera->setNearClipDistance(10.f);
-						camera->setFarClipDistance(1000.f);
-					}
+					auto dummyScene = std::make_shared<DummySceneListener>(imp_.MainWnd_);
+					dummyScene->Load();
+					OgreEnv::GetInstance().AddFrameListener(dummyScene);
 
 					Ogre::Root::getSingletonPtr()->getRenderSystem()->_initRenderTargets();
 

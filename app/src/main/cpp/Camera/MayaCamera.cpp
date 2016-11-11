@@ -17,7 +17,7 @@ public:
 	Ogre::Vector3		Position_{};
 	float 				FocusLen_{150.f};
 	float 				RotationSpeed_{.25f};
-	bool				PointerMoving_{true};
+	bool				PointerMoving_{false};
 	PointerState		LastPointerState_;
 
 public:
@@ -107,7 +107,9 @@ public:
 };
 
 MayaCamera::MayaCamera( Ogre::Camera *camera ):ICameraFrameListener(camera), ImpUPtr_(new Imp)
-{ }
+{
+	ImpUPtr_->Init(camera);
+}
 
 MayaCamera::~MayaCamera()
 { }
@@ -185,6 +187,18 @@ void MayaCamera::_FrameStart( const Ogre::FrameEvent &fevt )
 	auto& evtRecoder = GetEventRecorder();
 
 	auto needUpdate = false;
+
+	if ( !imp_.PointerMoving_ && evtRecoder.GetPointerRecorder().HasPressed() )
+	{
+		imp_.LastPointerState_ = EventRecorder::GetStaticPointerState();
+
+		imp_.PointerMoving_ = true;
+	}
+	else
+	if ( imp_.PointerMoving_ && evtRecoder.GetPointerRecorder().HasReleased() )
+	{
+		imp_.PointerMoving_ = false;
+	}
 
 	if ( imp_.PointerMoving_ )
 	{

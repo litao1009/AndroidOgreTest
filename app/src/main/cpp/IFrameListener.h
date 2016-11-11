@@ -41,6 +41,10 @@ public:
 
 	const EventRecorder&	GetEventRecorder() const;
 
+public:
+
+	virtual void	Load() {}
+
 protected:
 
 	virtual void	_FrameStart(const Ogre::FrameEvent& fevt) {}

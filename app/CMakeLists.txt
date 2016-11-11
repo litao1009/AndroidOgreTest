@@ -42,6 +42,8 @@ set( NATIVE_SOURCE
     ${NATIVE_SOURCE_DIR}/IFrameListenerFwd.h
     ${NATIVE_SOURCE_DIR}/ICameraFrameListener.cpp
     ${NATIVE_SOURCE_DIR}/ICameraFrameListener.h
+    ${NATIVE_SOURCE_DIR}/SceneListener/DummySceneListener.cpp
+    ${NATIVE_SOURCE_DIR}/SceneListener/DummySceneListener.h
     )
 
 add_library( NativeMain SHARED

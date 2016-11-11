@@ -27,7 +27,7 @@ fragment_program FP/Base/Color/GLSLES glsles
 	default_params
 	{
 		param_named_auto colour surface_diffuse_colour
-		param_named_auto worldViewMatrix worldview_matrix
+		param_named_auto worldMatrix world_matrix
 		param_named_auto lightPosition light_position_object_space 0
 		param_named_auto lightDiffuse light_diffuse_colour 0
 	}
@@ -61,7 +61,7 @@ fragment_program FP/Base/Light/GLSLES glsles
 	profiles glsles
 	default_params
 	{
-		param_named_auto worldViewMatrix worldview_matrix
+		param_named_auto worldMatrix world_matrix
 		param_named_auto lightPosition light_position_object_space 0
 		param_named_auto lightDiffuse light_diffuse_colour 0
 	}

@@ -73,6 +73,8 @@ void IFrameListener::FrameEnd( const Ogre::FrameEvent &fevt )
 	}
 
 	_FrameEndPost(fevt);
+
+	imp_.EventRecorder_.Reset();
 }
 
 void IFrameListener::OnInputEvent( const PointerState &ps )
