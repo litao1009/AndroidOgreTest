@@ -53,6 +53,14 @@ MayaCamera::MayaCamera( Ogre::Camera *camera ):ICameraFrameListener(camera), Imp
 
 	imp_.Camera_ = camera;
 	imp_.Smgr_ = camera->getSceneManager();
+}
+
+MayaCamera::~MayaCamera()
+{ }
+
+void MayaCamera::_Load()
+{
+	auto& imp_ = *ImpUPtr_;
 
 	imp_.TargetNode_ = imp_.Smgr_->getRootSceneNode()->createChildSceneNode();
 	imp_.TargetNode_->setName("MayaCamera::TargetNode_");
@@ -64,19 +72,16 @@ MayaCamera::MayaCamera( Ogre::Camera *camera ):ICameraFrameListener(camera), Imp
 	imp_.PositionNode_->setName("MayaCamera::PositionNode_");
 	imp_.PositionNode_->setPosition(0, 0, 150.f);
 
-	imp_.Camera_->detachFromParent();
-	imp_.PositionNode_->attachObject(imp_.Camera_);
-
-	imp_.Camera_->setNearClipDistance(20);
-	imp_.Camera_->setAutoAspectRatio(true);
-	imp_.Camera_->setFOVy(Ogre::Degree(60));
-	imp_.Camera_->setProjectionType(Ogre::PT_PERSPECTIVE);
-	imp_.Camera_->setFixedYawAxis(true);
-	imp_.Camera_->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Z);
+	Attach();
 }
 
-MayaCamera::~MayaCamera()
-{ }
+void MayaCamera::_Unload()
+{
+	auto& imp_ = *ImpUPtr_;
+
+	imp_.Camera_->detachFromParent();
+	imp_.Smgr_->getRootSceneNode()->removeAndDestroyChild(imp_.TargetNode_);
+}
 
 void MayaCamera::SetPosAndTarget( const Ogre::Vector3 &pos, const Ogre::Vector3 &target )
 {
@@ -194,4 +199,16 @@ void MayaCamera::_FrameStart( const Ogre::FrameEvent &fevt )
 }
 
 void MayaCamera::_Attach()
-{ }
+{
+	auto& imp_ = *ImpUPtr_;
+
+	imp_.Camera_->detachFromParent();
+	imp_.PositionNode_->attachObject(imp_.Camera_);
+
+	imp_.Camera_->setNearClipDistance(20);
+	imp_.Camera_->setAutoAspectRatio(true);
+	imp_.Camera_->setFOVy(Ogre::Degree(60));
+	imp_.Camera_->setProjectionType(Ogre::PT_PERSPECTIVE);
+	imp_.Camera_->setFixedYawAxis(true);
+	imp_.Camera_->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Z);
+}

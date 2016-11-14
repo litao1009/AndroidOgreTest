@@ -24,6 +24,10 @@ private:
 
 	virtual void	_Attach() override ;
 
+	virtual void	_Load() override ;
+
+	virtual void	_Unload() override ;
+
 public:
 
 	void SetPosition(const Ogre::Vector3& pos);
