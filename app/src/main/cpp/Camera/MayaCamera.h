@@ -20,17 +20,19 @@ public:
 
 private:
 
-	virtual void	_FrameStart(const Ogre::FrameEvent& fevt);
+	virtual void	_FrameStart(const Ogre::FrameEvent& fevt) override ;
+
+	virtual void	_Attach() override ;
 
 public:
 
 	void SetPosition(const Ogre::Vector3& pos);
 
-	const Ogre::Vector3&	GetPosition() const;
+	Ogre::Vector3	GetPosition() const;
 
 	void SetTarget(const Ogre::Vector3& target);
 
-	const Ogre::Vector3&	GetTarget() const;
+	Ogre::Vector3	GetTarget() const;
 
 	void	SetPosAndTarget(const Ogre::Vector3& pos, const Ogre::Vector3& target);
 

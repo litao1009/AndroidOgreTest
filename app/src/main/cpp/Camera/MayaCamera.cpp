@@ -8,40 +8,26 @@ public:
 
 	Ogre::Camera*		Camera_{};
 	Ogre::SceneManager*	Smgr_{};
-	Ogre::SceneNode*	CameraNode_{};
-	Ogre::Quaternion	Yaw_ = Ogre::Quaternion::IDENTITY;
-	Ogre::Quaternion	Pitch_ = Ogre::Quaternion::IDENTITY;
-	Ogre::Quaternion	Roll_ = Ogre::Quaternion::IDENTITY;
-	Ogre::Quaternion	Rotation_ = Ogre::Quaternion::IDENTITY;
-	Ogre::Vector3		Target_{};
-	Ogre::Vector3		Position_{};
-	float 				FocusLen_{150.f};
+	Ogre::SceneNode*	PositionNode_{};
+	Ogre::SceneNode*	TargetNode_{};
+	Ogre::SceneNode*	Yaw_{};
+	Ogre::SceneNode*	Pitch_{};
 	float 				RotationSpeed_{.25f};
 	bool				PointerMoving_{false};
 	PointerState		LastPointerState_;
 
 public:
 
-	void	UpdateNode()
-	{
-		Rotation_ = Roll_ * Yaw_ * Pitch_;
-		Position_ = (Rotation_ * Ogre::Vector3::UNIT_Z) * FocusLen_ + Target_;
-
-		CameraNode_->setPosition(Position_);
-		CameraNode_->setOrientation(Rotation_);
-	}
-
 	void	UpdateData(const Ogre::Vector3& target, const Ogre::Vector3& pos)
 	{
 		//视线方向Z
 		auto rotateTo = pos - target;
 
-		Target_ = target;
-		Position_ = pos;
-		FocusLen_ = rotateTo.normalise();
+		TargetNode_->setPosition(target);
+		PositionNode_->setPosition(0, 0, rotateTo.normalise());
 
-		Pitch_ = Ogre::Quaternion::IDENTITY;
-		Yaw_ = Ogre::Quaternion::IDENTITY;
+		auto pitch = Ogre::Quaternion::IDENTITY;
+		auto yaw = Ogre::Quaternion::IDENTITY;
 
 		auto step1 = rotateTo;
 		step1.y = 0;
@@ -49,43 +35,44 @@ public:
 
 		if ( length > 0.f )
 		{
-			Yaw_ = step1.getRotationTo(Ogre::Vector3::UNIT_Z);
+			yaw = step1.getRotationTo(Ogre::Vector3::UNIT_Z);
 		}
 
-		auto step2 =  Yaw_ * rotateTo;
+		auto step2 =  yaw * rotateTo;
 
-		Pitch_ = step2.getRotationTo(Ogre::Vector3::UNIT_Z);
+		pitch = step2.getRotationTo(Ogre::Vector3::UNIT_Z);
 
-		Pitch_ = Pitch_.Inverse();
-		Yaw_ = Yaw_.Inverse();
-
-		UpdateNode();
-	}
-
-	void	Init(Ogre::Camera* camera)
-	{
-		Camera_ = camera;
-		Smgr_ = camera->getSceneManager();
-
-		CameraNode_ = Smgr_->getRootSceneNode()->createChildSceneNode();
-		CameraNode_->setName("MayaCamera::CameraNode_");
-		CameraNode_->setPosition(0, 0, FocusLen_);
-
-		Camera_->detachFromParent();
-		CameraNode_->attachObject(Camera_);
-
-		Camera_->setNearClipDistance(20);
-		Camera_->setAutoAspectRatio(true);
-		Camera_->setFOVy(Ogre::Degree(60));
-		Camera_->setProjectionType(Ogre::PT_PERSPECTIVE);
-		Camera_->setFixedYawAxis(true);
-		Camera_->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Z);
+		Pitch_->setOrientation(pitch.Inverse());
+		Yaw_->setOrientation(yaw.Inverse());
 	}
 };
 
 MayaCamera::MayaCamera( Ogre::Camera *camera ):ICameraFrameListener(camera), ImpUPtr_(new Imp)
 {
-	ImpUPtr_->Init(camera);
+	auto& imp_ = *ImpUPtr_;
+
+	imp_.Camera_ = camera;
+	imp_.Smgr_ = camera->getSceneManager();
+
+	imp_.TargetNode_ = imp_.Smgr_->getRootSceneNode()->createChildSceneNode();
+	imp_.TargetNode_->setName("MayaCamera::TargetNode_");
+	imp_.Yaw_ = imp_.TargetNode_->createChildSceneNode();
+	imp_.Yaw_->setName("MayaCamera::Yaw_");
+	imp_.Pitch_ = imp_.Yaw_->createChildSceneNode();
+	imp_.Pitch_->setName("MayaCamera::Pitch_");
+	imp_.PositionNode_ = imp_.Pitch_->createChildSceneNode();
+	imp_.PositionNode_->setName("MayaCamera::PositionNode_");
+	imp_.PositionNode_->setPosition(0, 0, 150.f);
+
+	imp_.Camera_->detachFromParent();
+	imp_.PositionNode_->attachObject(imp_.Camera_);
+
+	imp_.Camera_->setNearClipDistance(20);
+	imp_.Camera_->setAutoAspectRatio(true);
+	imp_.Camera_->setFOVy(Ogre::Degree(60));
+	imp_.Camera_->setProjectionType(Ogre::PT_PERSPECTIVE);
+	imp_.Camera_->setFixedYawAxis(true);
+	imp_.Camera_->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Z);
 }
 
 MayaCamera::~MayaCamera()
@@ -102,45 +89,42 @@ void MayaCamera::SetPosition( const Ogre::Vector3 &pos )
 {
 	auto& imp_ = *ImpUPtr_;
 
-	imp_.UpdateData(imp_.Target_, pos);
+	imp_.UpdateData(imp_.TargetNode_->getPosition(), pos);
 }
 
-const Ogre::Vector3& MayaCamera::GetPosition() const
+Ogre::Vector3 MayaCamera::GetPosition() const
 {
 	auto& imp_ = *ImpUPtr_;
 
-	return imp_.Position_;
+	return imp_.PositionNode_->_getDerivedPosition();
 }
 
 void MayaCamera::SetTarget( const Ogre::Vector3 &target )
 {
 	auto& imp_ = *ImpUPtr_;
 
-	imp_.UpdateData(target, imp_.Position_);
+	imp_.UpdateData(target, imp_.PositionNode_->_getDerivedPosition());
 }
 
-const Ogre::Vector3& MayaCamera::GetTarget() const
+Ogre::Vector3 MayaCamera::GetTarget() const
 {
 	auto& imp_ = *ImpUPtr_;
 
-	return imp_.Target_;
+	return imp_.TargetNode_->getPosition();
 }
 
 void MayaCamera::SetFocusLength( float length )
 {
 	auto& imp_ = *ImpUPtr_;
 
-	imp_.FocusLen_ = length;
-	imp_.Position_ = imp_.Target_ + (imp_.Position_ - imp_.Target_).normalisedCopy() * imp_.FocusLen_;
-
-	imp_.UpdateData(imp_.Target_, imp_.Position_);
+	imp_.PositionNode_->setPosition(0, 0, length);
 }
 
 float MayaCamera::GetFocusLength() const
 {
 	auto& imp_ = *ImpUPtr_;
 
-	return imp_.FocusLen_;
+	return imp_.PositionNode_->getPosition().z;
 }
 
 void MayaCamera::SetRotationSpeed( float rSpeed )
@@ -163,8 +147,6 @@ void MayaCamera::_FrameStart( const Ogre::FrameEvent &fevt )
 
 	auto& evtRecoder = GetEventRecorder();
 
-	auto needUpdate = false;
-
 	if ( !imp_.PointerMoving_ && evtRecoder.GetPointerRecorder().HasPressed() )
 	{
 		imp_.LastPointerState_ = EventRecorder::GetStaticPointerState();
@@ -183,32 +165,33 @@ void MayaCamera::_FrameStart( const Ogre::FrameEvent &fevt )
 
 		if ( 0 != offset.X.rel || 0 != offset.Y.rel )
 		{
-			auto yaw = Ogre::Degree(-offset.X.rel * imp_.RotationSpeed_) + imp_.Yaw_.getYaw();
-			imp_.Yaw_.FromAngleAxis(yaw, Ogre::Vector3::UNIT_Y);
+			auto yaw = Ogre::Degree(-offset.X.rel * imp_.RotationSpeed_) + imp_.Yaw_->getOrientation().getYaw();
+			Ogre::Quaternion quaYaw;
+			quaYaw.FromAngleAxis(yaw, Ogre::Vector3::UNIT_Y);
+			imp_.Yaw_->setOrientation(quaYaw);
 
-			auto pitch = Ogre::Degree(-offset.Y.rel * imp_.RotationSpeed_) + imp_.Pitch_.getPitch();
-			imp_.Pitch_.FromAngleAxis(pitch, Ogre::Vector3::UNIT_X);
+			auto pitch = Ogre::Degree(-offset.Y.rel * imp_.RotationSpeed_) + imp_.Pitch_->getOrientation().getPitch();
+			Ogre::Quaternion quaPitch;
+			quaPitch.FromAngleAxis(pitch, Ogre::Vector3::UNIT_X);
 
-			auto pitchAngle = imp_.Pitch_.getPitch();
+			auto pitchAngle = quaPitch.getPitch();
 			auto tooSmall = std::numeric_limits<Ogre::Real>::epsilon();
 
 			if ( pitchAngle > Ogre::Radian(Ogre::Degree(90 - tooSmall)) )
 			{
-				imp_.Pitch_.FromAngleAxis(Ogre::Degree(90), Ogre::Vector3::UNIT_X);
+				quaPitch.FromAngleAxis(Ogre::Degree(90), Ogre::Vector3::UNIT_X);
 			}
 			else if ( pitchAngle < Ogre::Radian(Ogre::Degree(-90 + tooSmall)) )
 			{
-				imp_.Pitch_.FromAngleAxis(Ogre::Degree(-90), Ogre::Vector3::UNIT_X);
+				quaPitch.FromAngleAxis(Ogre::Degree(-90), Ogre::Vector3::UNIT_X);
 			}
 
-			imp_.LastPointerState_ = EventRecorder::GetStaticPointerState();
+			imp_.Pitch_->setOrientation(quaPitch);
 
-			needUpdate = true;
+			imp_.LastPointerState_ = EventRecorder::GetStaticPointerState();
 		}
 	}
-
-	if ( needUpdate )
-	{
-		imp_.UpdateNode();
-	}
 }
+
+void MayaCamera::_Attach()
+{ }
