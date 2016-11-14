@@ -43,44 +43,21 @@ public:
 		Pitch_ = Ogre::Quaternion::IDENTITY;
 		Yaw_ = Ogre::Quaternion::IDENTITY;
 
-		auto rtY = rotateTo.y;
-		if ( rtY > 1 )
-		{
-			rtY = Ogre::Math::Clamp(rtY, 0.f, 1.f);
-		}
-		else if ( rtY < -1 )
-		{
-			rtY = Ogre::Math::Clamp(rtY, -1.f, 0.f);
-		}
+		auto step1 = rotateTo;
+		step1.y = 0;
+		auto length = step1.normalise();
 
-		auto thetaX = std::asin(-rtY);
-
-		auto rtXDivTx = rotateTo.x / std::cos(thetaX);
-		if ( rtXDivTx > 1 )
+		if ( length > 0.f )
 		{
-			rtXDivTx = Ogre::Math::Clamp(rtXDivTx, 0.f, 1.f);
-		}
-		else if ( rtXDivTx < -1 )
-		{
-			rtXDivTx = Ogre::Math::Clamp(rtXDivTx, -1.f, 0.f);
+			Yaw_ = step1.getRotationTo(Ogre::Vector3::UNIT_Z);
 		}
 
-		auto thetaY = std::asin(rtXDivTx);
+		auto step2 =  Yaw_ * rotateTo;
 
-		if ( std::abs(std::cos(thetaX)) < 1E-05 )
-		{
-			thetaY = 0;
-		}
+		Pitch_ = step2.getRotationTo(Ogre::Vector3::UNIT_Z);
 
-		auto cosXcosY = std::cos(thetaX) * std::cos(thetaY);
-		if ( std::abs(cosXcosY - rotateTo.z) > 1E-05 )
-		{
-			thetaY = Ogre::Math::PI - thetaY;
-		}
-
-		Pitch_.FromAngleAxis(Ogre::Radian(thetaX), Ogre::Vector3::UNIT_X);
-		Yaw_.FromAngleAxis(Ogre::Radian(thetaY), Ogre::Vector3::UNIT_Y);
-		assert(!Yaw_.isNaN());
+		Pitch_ = Pitch_.Inverse();
+		Yaw_ = Yaw_.Inverse();
 
 		UpdateNode();
 	}

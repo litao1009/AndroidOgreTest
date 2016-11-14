@@ -6,6 +6,7 @@ class	IFrameListener::Imp
 {
 public:
 
+	bool								Load_{false};
 	EventRecorder						EventRecorder_;
 	std::vector<IFrameListenerSPtr >	ChildList_;
 };
@@ -16,7 +17,9 @@ IFrameListener::IFrameListener():IFrameListenerUPtr_(new Imp)
 }
 
 IFrameListener::~IFrameListener()
-{ }
+{
+	Unload();
+}
 
 void IFrameListener::AddChild( const IFrameListenerSPtr &child )
 {
@@ -36,6 +39,8 @@ void IFrameListener::RemoveChild( const IFrameListenerSPtr &child )
 void IFrameListener::FrameStart( const Ogre::FrameEvent &fevt )
 {
 	auto& imp_ = *IFrameListenerUPtr_;
+
+	Load();
 
 	_FrameStart(fevt);
 
@@ -96,4 +101,35 @@ const EventRecorder& IFrameListener::GetEventRecorder() const
 	auto& imp_ = *IFrameListenerUPtr_;
 
 	return imp_.EventRecorder_;
+}
+
+void IFrameListener::Load()
+{
+	auto& imp_ = *IFrameListenerUPtr_;
+
+	if( !imp_.Load_ )
+	{
+		_Load();
+
+		imp_.Load_ = true;
+	}
+}
+
+void IFrameListener::Unload()
+{
+	auto& imp_ = *IFrameListenerUPtr_;
+
+	if ( imp_.Load_ )
+	{
+		_Unload();
+
+		imp_.Load_ = false;
+	}
+}
+
+bool IFrameListener::Loaded() const
+{
+	auto& imp_ = *IFrameListenerUPtr_;
+
+	return imp_.Load_;
 }

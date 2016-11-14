@@ -72,7 +72,6 @@ public:
 					Ogre::ResourceGroupManager::getSingletonPtr()->initialiseAllResourceGroups();
 
 					auto dummyScene = std::make_shared<DummySceneListener>(imp_.MainWnd_);
-					dummyScene->Load();
 					OgreEnv::GetInstance().AddFrameListener(dummyScene);
 
 					Ogre::Root::getSingletonPtr()->getRenderSystem()->_initRenderTargets();

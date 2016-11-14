@@ -16,8 +16,10 @@ public:
 
 	~DummySceneListener();
 
-public:
+private:
 
-	virtual void	Load();
+	virtual void	_Load() override;
+
+	virtual void	_Unload() override ;
 };
 

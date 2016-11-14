@@ -26,6 +26,12 @@ ICameraFrameListener::ICameraFrameListener( Ogre::Camera *camera )
 {
 	auto listPtr = ValidatevaUserBinding(camera);
 	Camera_ = camera;
+
+	if ( !listPtr->empty() )
+	{
+		listPtr->back()->Detach();
+	}
+
 	listPtr->push_back(this);
 }
 
@@ -59,7 +65,14 @@ void ICameraFrameListener::CameraFrameStart( Ogre::Camera *camera, const Ogre::F
 
 	if ( !listPtr->empty() )
 	{
-		listPtr->back()->FrameStart(fevt);
+		auto& cur = listPtr->back();
+
+		if ( !cur->Attached() )
+		{
+			cur->Attach();
+		}
+
+		cur->FrameStart(fevt);
 	}
 }
 
@@ -81,5 +94,30 @@ void ICameraFrameListener::CameraFrameEnd( Ogre::Camera *camera, const Ogre::Fra
 	{
 		listPtr->back()->FrameEnd(fevt);
 	}
+}
+
+void ICameraFrameListener::Attach()
+{
+	if ( !Attach_ )
+	{
+		_Attach();
+
+		Attach_ = true;
+	}
+}
+
+void ICameraFrameListener::Detach()
+{
+	if ( Attach_ )
+	{
+		_Detach();
+
+		Attach_ = false;
+	}
+}
+
+bool ICameraFrameListener::Attached() const
+{
+	return Attach_;
 }
 

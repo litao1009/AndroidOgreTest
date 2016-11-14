@@ -43,7 +43,11 @@ public:
 
 public:
 
-	virtual void	Load() {}
+	void	Load();
+
+	void	Unload();
+
+	bool	Loaded() const;
 
 protected:
 
@@ -60,4 +64,8 @@ protected:
 	virtual void	_FrameEndPost(const Ogre::FrameEvent& fevt) {}
 
 	virtual void	_OnInputEvent(const PointerState& ps) {}
+
+	virtual void	_Load() {}
+
+	virtual void	_Unload() {}
 };

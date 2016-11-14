@@ -19,6 +19,18 @@ public:
 
 public:
 
+	void	Attach();
+
+	void	Detach();
+
+	bool	Attached() const;
+
+protected:
+
+	virtual void	_Attach() {}
+
+	virtual void	_Detach() {}
+
 public:
 
 	static void	CameraFrameStart( Ogre::Camera *camera, const Ogre::FrameEvent &fevt );
@@ -36,4 +48,5 @@ public:
 private:
 
 	Ogre::Camera*	Camera_{};
+	bool			Attach_{false};
 };
