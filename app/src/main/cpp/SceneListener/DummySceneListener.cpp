@@ -9,6 +9,7 @@ class 	DummySceneListener::Imp
 public:
 
 	Ogre::RenderWindow*	RT_{};
+	MayaCameraSPtr 		CameraListener_{};
 };
 
 DummySceneListener::DummySceneListener( Ogre::RenderWindow *rt ):ImpUPtr_(new Imp)
@@ -17,7 +18,11 @@ DummySceneListener::DummySceneListener( Ogre::RenderWindow *rt ):ImpUPtr_(new Im
 }
 
 DummySceneListener::~DummySceneListener()
-{ }
+{
+	auto& imp_ = *ImpUPtr_;
+
+	imp_.CameraListener_.reset();
+}
 
 void DummySceneListener::Load()
 {
@@ -50,5 +55,5 @@ void DummySceneListener::Load()
 	camera->setNearClipDistance(10.f);
 	camera->setFarClipDistance(1000.f);
 
-	AddChild(mayaCamera);
+	imp_.CameraListener_ = mayaCamera;
 }

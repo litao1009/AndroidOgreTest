@@ -95,6 +95,13 @@ public:
 				{
 					static_cast<Ogre::AndroidEGLWindow*>(imp_.MainWnd_)->_destroyInternalResources();
 				}
+
+				AndroidBridge::GetInstance().Shutdown();
+			}
+				break;
+			case APP_CMD_DESTROY:
+			{
+
 			}
 				break;
 		}

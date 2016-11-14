@@ -1,6 +1,7 @@
 #include "OgreEnv.h"
 #include "InputEvent.h"
 #include "IFrameListener.h"
+#include "ICameraFrameListener.h"
 
 #include "Ogre.h"
 
@@ -11,11 +12,27 @@ class	OgreEnv::Imp : public Ogre::FrameListener
 public:
 
 	std::vector<IFrameListenerSPtr>	ChildList_;
+	std::vector<Ogre::Camera*>		UpdateCameraList_;
 
 public:
 
 	virtual bool frameStarted(const Ogre::FrameEvent& evt) override
 	{
+		auto smgrList = Ogre::Root::getSingletonPtr()->getSceneManagerIterator();
+		for (auto& curSmgr : smgrList )
+		{
+			auto cameraList = curSmgr.second->getCameraIterator();
+			for (auto& curCamera : cameraList )
+			{
+				UpdateCameraList_.push_back(curCamera);
+			}
+		}
+
+		for (auto& curCamera : UpdateCameraList_ )
+		{
+			ICameraFrameListener::CameraFrameStart(curCamera, evt);
+		}
+
 		for (auto& curChild : ChildList_)
 		{
 			curChild->FrameStart(evt);
@@ -26,6 +43,11 @@ public:
 
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt) override
 	{
+		for (auto& curCamera : UpdateCameraList_ )
+		{
+			ICameraFrameListener::CameraFrameQueue(curCamera, evt);
+		}
+
 		for (auto& curChild : ChildList_)
 		{
 			curChild->FrameQueue(evt);
@@ -36,10 +58,17 @@ public:
 
 	virtual bool frameEnded(const Ogre::FrameEvent& evt) override
 	{
+		for (auto& curCamera : UpdateCameraList_ )
+		{
+			ICameraFrameListener::CameraFrameEnd(curCamera, evt);
+		}
+
 		for (auto& curChild : ChildList_)
 		{
 			curChild->FrameEnd(evt);
 		}
+
+		UpdateCameraList_.clear();
 
 		return true;
 	}
@@ -97,6 +126,16 @@ void OgreEnv::OnInputEvent( const PointerState &evt )
 	auto& imp_ = *ImpUPtr_;
 
 	EventRecorder::GetStaticPointerState() = evt;
+
+	auto smgrList = Ogre::Root::getSingletonPtr()->getSceneManagerIterator();
+	for (auto& curSmgr : smgrList )
+	{
+		auto cameraList = curSmgr.second->getCameraIterator();
+		for (auto& curCamera : cameraList )
+		{
+			ICameraFrameListener::CameraOnInputEvent(curCamera, evt);
+		}
+	}
 
 	for (auto& curChild : imp_.ChildList_)
 	{

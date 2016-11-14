@@ -2,9 +2,9 @@
 
 #include "Ogre.h"
 
-#include <map>
+#include <vector>
 
-using	ICameraFrameListenerImpList = std::map<uint32_t, ICameraFrameListener* >;
+using	ICameraFrameListenerImpList = std::vector<ICameraFrameListener*>;
 using	ICameraFrameListenerImpListSPtr = std::shared_ptr<ICameraFrameListenerImpList>;
 
 static ICameraFrameListenerImpListSPtr	ValidatevaUserBinding(Ogre::Camera *camera)
@@ -24,23 +24,62 @@ static ICameraFrameListenerImpListSPtr	ValidatevaUserBinding(Ogre::Camera *camer
 
 ICameraFrameListener::ICameraFrameListener( Ogre::Camera *camera )
 {
-	//auto listPtr = ValidatevaUserBinding(camera);
-
-	BindingKey_ = reinterpret_cast<uint32_t>(static_cast<void*>(this));
+	auto listPtr = ValidatevaUserBinding(camera);
 	Camera_ = camera;
-
-	//listPtr->emplace(BindingKey_, this);
+	listPtr->push_back(this);
 }
 
 ICameraFrameListener::~ICameraFrameListener()
 {
-	//auto listPtr = ValidatevaUserBinding(Camera_);
+	auto listPtr = ValidatevaUserBinding(Camera_);
 
-	//listPtr->erase(BindingKey_);
+	assert(listPtr->back() == this);
+
+	listPtr->pop_back();
 }
 
 Ogre::Camera* ICameraFrameListener::GetCamera() const
 {
 	return Camera_;
+}
+
+void ICameraFrameListener::CameraOnInputEvent( Ogre::Camera *camera, const PointerState &ps )
+{
+	auto listPtr = ValidatevaUserBinding(camera);
+
+	if ( !listPtr->empty() )
+	{
+		listPtr->back()->OnInputEvent(ps);
+	}
+}
+
+void ICameraFrameListener::CameraFrameStart( Ogre::Camera *camera, const Ogre::FrameEvent &fevt )
+{
+	auto listPtr = ValidatevaUserBinding(camera);
+
+	if ( !listPtr->empty() )
+	{
+		listPtr->back()->FrameStart(fevt);
+	}
+}
+
+void ICameraFrameListener::CameraFrameQueue( Ogre::Camera *camera, const Ogre::FrameEvent &fevt )
+{
+	auto listPtr = ValidatevaUserBinding(camera);
+
+	if ( !listPtr->empty() )
+	{
+		listPtr->back()->FrameQueue(fevt);
+	}
+}
+
+void ICameraFrameListener::CameraFrameEnd( Ogre::Camera *camera, const Ogre::FrameEvent &fevt )
+{
+	auto listPtr = ValidatevaUserBinding(camera);
+
+	if ( !listPtr->empty() )
+	{
+		listPtr->back()->FrameEnd(fevt);
+	}
 }
 
