@@ -57,7 +57,6 @@ void DummySceneListener::_Load()
 	headNode->setPosition({0.f, 0.f, 0.f});
 
 	auto mayaCamera = std::make_shared<MayaCamera>(camera);
-	mayaCamera->Load();
 	mayaCamera->SetPosAndTarget({30.f, 90.f, 150.f}, {0.f, 0.f, 0.f});
 
 	camera->setNearClipDistance(10.f);
