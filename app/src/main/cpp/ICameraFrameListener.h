@@ -10,6 +10,8 @@ namespace Ogre
 
 class ICameraFrameListener : public IFrameListener
 {
+	class	Imp;
+	std::unique_ptr<Imp>	ImpUPtr_;
 
 public:
 
@@ -17,19 +19,9 @@ public:
 
 	~ICameraFrameListener();
 
-public:
-
-	void	Attach();
-
-	void	Detach();
-
-	bool	Attached() const;
-
 protected:
 
 	virtual void	_Attach() {}
-
-	virtual void	_Detach() {}
 
 public:
 
@@ -44,9 +36,4 @@ public:
 public:
 
 	Ogre::Camera*	GetCamera() const;
-
-private:
-
-	Ogre::Camera*	Camera_{};
-	bool			Attach_{false};
 };

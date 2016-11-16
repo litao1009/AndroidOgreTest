@@ -63,6 +63,15 @@ MayaCamera::MayaCamera( Ogre::Camera *camera ):ICameraFrameListener(camera), Imp
 	imp_.PositionNode_ = imp_.Pitch_->createChildSceneNode();
 	imp_.PositionNode_->setName("MayaCamera::PositionNode_");
 	imp_.PositionNode_->setPosition(0, 0, 150.f);
+
+	imp_.Camera_->setNearClipDistance(20);
+	imp_.Camera_->setAutoAspectRatio(true);
+	imp_.Camera_->setFOVy(Ogre::Degree(60));
+	imp_.Camera_->setProjectionType(Ogre::PT_PERSPECTIVE);
+	imp_.Camera_->setFixedYawAxis(true);
+	imp_.Camera_->setOrientation(Ogre::Quaternion::IDENTITY);
+
+	imp_.PositionNode_->attachObject(camera);
 }
 
 MayaCamera::~MayaCamera()
@@ -202,13 +211,5 @@ void MayaCamera::_Attach()
 {
 	auto& imp_ = *ImpUPtr_;
 
-	imp_.Camera_->detachFromParent();
 	imp_.PositionNode_->attachObject(imp_.Camera_);
-
-	imp_.Camera_->setNearClipDistance(20);
-	imp_.Camera_->setAutoAspectRatio(true);
-	imp_.Camera_->setFOVy(Ogre::Degree(60));
-	imp_.Camera_->setProjectionType(Ogre::PT_PERSPECTIVE);
-	imp_.Camera_->setFixedYawAxis(true);
-	imp_.Camera_->setOrientation(Ogre::Quaternion::IDENTITY);
 }

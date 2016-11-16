@@ -339,6 +339,10 @@ namespace Ogre {
         */
         void setFixedYawAxis( bool useFixed, const Vector3& fixedAxis = Vector3::UNIT_Y );
 
+        bool getUseFixedYawAxis() const;
+
+        const Vector3& getFixedAxis() const;
+
 
         /** Returns the camera's current orientation.
         */

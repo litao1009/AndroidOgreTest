@@ -464,6 +464,16 @@ namespace Ogre {
         mYawFixedAxis = fixedAxis;
     }
 
+    bool Camera::getUseFixedYawAxis() const
+    {
+        return mYawFixed;
+    }
+
+    const Vector3& Camera::getFixedAxis() const
+    {
+        return mYawFixedAxis;
+    }
+
     //-----------------------------------------------------------------------
     void Camera::_notifyRenderedFaces(unsigned int numfaces)
     {
