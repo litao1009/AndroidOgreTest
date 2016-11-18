@@ -207,7 +207,7 @@ void MayaCamera::_FrameStart( const Ogre::FrameEvent &fevt )
 	}
 }
 
-void MayaCamera::_Attach()
+void MayaCamera::ReAttach()
 {
 	auto& imp_ = *ImpUPtr_;
 

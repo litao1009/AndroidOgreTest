@@ -63,6 +63,10 @@ void DummySceneListener::_Load()
 	camera->setFarClipDistance(1000.f);
 
 	imp_.CameraListener_ = mayaCamera;
+
+	auto ps = imp_.Smgr_->createParticleSystem("Rain");
+	auto psNode = imp_.Smgr_->getRootSceneNode()->createChildSceneNode();
+	psNode->attachObject(ps);
 }
 
 void DummySceneListener::_Unload()

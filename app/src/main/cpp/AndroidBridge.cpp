@@ -67,6 +67,7 @@ public:
 					Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation("Materials", "APKFileSystem");
 					Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation("Materials/Programs", "APKFileSystem");
 					Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation("Textures", "APKFileSystem");
+					Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation("Particles", "APKFileSystem");
 
 					//load resources
 					Ogre::ResourceGroupManager::getSingletonPtr()->initialiseAllResourceGroups();

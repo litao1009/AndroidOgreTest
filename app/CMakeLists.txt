@@ -82,6 +82,7 @@ set(OGRE_NATIVE_INCLUDE
 target_link_libraries( NativeMain
                        OgreMain
                        RenderSystem_GLES2
+                       Plugin_ParticleFX
                        OIS
                         )
 

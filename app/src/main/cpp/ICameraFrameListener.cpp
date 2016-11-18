@@ -131,7 +131,7 @@ void ICameraFrameListener::CameraFrameStart( Ogre::Camera *camera, const Ogre::F
 		auto& imp_ = *(cur->ImpUPtr_);
 		if ( !imp_.Camera_->isAttached() )
 		{
-			cur->_Attach();
+			cur->ReAttach();
 		}
 
 		cur->FrameStart(fevt);

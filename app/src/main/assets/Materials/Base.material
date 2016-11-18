@@ -38,3 +38,30 @@ material Mat/Base/Tex
 		}
 	}
 }
+
+material Mat/Rain
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+			scene_blend add
+
+			texture_unit
+			{
+				texture Flare.000.png
+			}
+			
+			vertex_program_ref VP/Base
+			{
+			}
+			
+			fragment_program_ref FP/Base/Tex
+			{
+				param_named diffuseTex int 0
+			}
+		}
+	}
+}

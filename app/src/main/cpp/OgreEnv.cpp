@@ -2,6 +2,7 @@
 #include "InputEvent.h"
 #include "IFrameListener.h"
 #include "ICameraFrameListener.h"
+#include "OgreParticleFXPlugin.h"
 
 #include "Ogre.h"
 
@@ -13,6 +14,7 @@ public:
 
 	std::vector<IFrameListenerSPtr>	ChildList_;
 	std::vector<Ogre::Camera*>		UpdateCameraList_;
+	std::vector<Ogre::Plugin*>		Plugins_;
 
 public:
 
@@ -88,9 +90,20 @@ OgreEnv& OgreEnv::GetInstance()
 
 void OgreEnv::Init()
 {
-	new Ogre::Root();
+	auto& imp_ = *ImpUPtr_;
 
-	Ogre::Root::getSingletonPtr()->addFrameListener(ImpUPtr_.get());
+	auto root = new Ogre::Root();
+
+	auto particleFX = new Ogre::ParticleFXPlugin();
+
+	imp_.Plugins_.push_back(particleFX);
+
+	for (auto& curPlugin : imp_.Plugins_ )
+	{
+		root->installPlugin(curPlugin);
+	}
+
+	root->addFrameListener(ImpUPtr_.get());
 }
 
 void OgreEnv::UnInit()
@@ -100,6 +113,11 @@ void OgreEnv::UnInit()
 	imp_.ChildList_.clear();
 
 	delete Ogre::Root::getSingletonPtr();
+
+	for (auto& curPlugin : imp_.Plugins_ )
+	{
+		delete curPlugin;
+	}
 }
 
 void OgreEnv::RenderOneFrame()

@@ -21,7 +21,7 @@ public:
 
 protected:
 
-	virtual void	_Attach() {}
+	virtual void	ReAttach() {}
 
 public:
 

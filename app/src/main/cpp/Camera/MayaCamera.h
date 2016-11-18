@@ -22,7 +22,7 @@ private:
 
 	virtual void	_FrameStart(const Ogre::FrameEvent& fevt) override ;
 
-	virtual void	_Attach() override ;
+	virtual void	ReAttach() override ;
 
 	virtual void	_Load() override ;
 
