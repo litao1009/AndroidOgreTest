@@ -5,27 +5,14 @@ cmake_minimum_required(VERSION 3.4.1)
 set(APP_GLUE_DIR
     "${ANDROID_NDK}/sources/android/native_app_glue")
 
-add_library(appGlue
+add_library(AppGlue
             STATIC
             ${APP_GLUE_DIR}/android_native_app_glue.c )
 
-target_link_libraries(appGlue
+target_link_libraries(AppGlue
                        android
                        log)
 ######################################################################  appGlue
-
-
-######################################################################  cpufeatures
-add_library(cpufeatures
-            STATIC
-            ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c )
-
-target_link_libraries(cpufeatures
-                        dl)
-
-target_include_directories(cpufeatures PRIVATE
-                             ${ANDROID_NDK}/sources/android/cpufeatures/)
-######################################################################  cpufeatures
 
 
 ######################################################################  NativeMain
@@ -51,7 +38,6 @@ set( NATIVE_SOURCE
     ${NATIVE_SOURCE_DIR}/ICameraFrameListener.h
     ${NATIVE_SOURCE_DIR}/SceneListener/DummySceneListener.cpp
     ${NATIVE_SOURCE_DIR}/SceneListener/DummySceneListener.h
-    ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c
     )
 
 add_library( NativeMain SHARED
@@ -60,13 +46,12 @@ add_library( NativeMain SHARED
 target_include_directories(NativeMain PRIVATE
                            ${APP_GLUE_DIR}
                            ${NATIVE_SOURCE_DIR}
-                           ${ANDROID_NDK}/sources/android/cpufeatures/)
+                           )
 
 target_link_libraries( NativeMain
-                       appGlue
+                       AppGlue
                        android
                        log
-                       cpufeatures
                        )
 ######################################################################  NativeMain
 
@@ -78,6 +63,8 @@ add_subdirectory(libs/ogredeps)
 
 ######################################################################  Ogre
 add_subdirectory(libs/ogre)
+
+
 
 set(OGRE_NATIVE_INCLUDE
     ${OGRE_SOURCE_DIR}/OgreMain/include

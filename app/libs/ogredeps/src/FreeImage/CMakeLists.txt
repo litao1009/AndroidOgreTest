@@ -536,8 +536,6 @@ if (OGRE_PROJECT_FOLDERS)
 	set_property(TARGET FreeImage PROPERTY FOLDER Dependencies)
 endif ()
 
-install_dep(FreeImage include Source/FreeImage.h)
-
 set(FreeImage_INCLUDE_DIR "${FreeImage_SOURCE_DIR}/Source" CACHE PATH "" FORCE)
 set(FreeImage_LIBRARY_DBG FreeImage CACHE STRING "" FORCE)
 set(FreeImage_LIBRARY_REL FreeImage CACHE STRING "" FORCE)

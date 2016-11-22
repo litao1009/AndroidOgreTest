@@ -212,6 +212,11 @@ elseif (APPLE)
 elseif(ANDROID)
   # required by OgrePlatformInformation.cpp
   include_directories(${ANDROID_NDK}/sources/android/cpufeatures)
+#  if (TARGET cpufeatures)
+#	list(APPEND LIBRARIES cpufeatures)
+#  else()
+	list(APPEND SOURCE_FILES ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c)
+#  endif()
 
   file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/Android/*.h")
   file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/Android/*.cpp"

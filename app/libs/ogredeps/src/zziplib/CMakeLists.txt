@@ -40,24 +40,8 @@ set(zziplib_SOURCES
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-if (WIN32 AND BUILD_SHARED_LIBS)
-  add_definitions(-DZZIP_DLL)
-  link_libraries(zlib)
-endif ()
-
 add_library(zziplib STATIC ${zziplib_SOURCES})
-install_dep(zziplib include/zzip zzip/_config.h zzip/conf.h zzip/types.h zzip/zzip.h zzip/plugin.h zzip/_msvc.h)
-if (OGRE_PROJECT_FOLDERS)
-	set_property(TARGET zziplib PROPERTY FOLDER Dependencies)
-endif ()
 
-if (APPLE)
- set_target_properties(zziplib PROPERTIES XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO")
-
- if(OGRE_BUILD_PLATFORM_APPLE_IOS)
-  set_target_properties(zziplib PROPERTIES XCODE_ATTRIBUTE_GCC_THUMB_SUPPORT "NO")
- endif()
-endif()
 set(ZZip_INCLUDE_DIR "${zziplib_SOURCE_DIR}" CACHE PATH "" FORCE)
 set(ZZip_LIBRARY_DBG "zziplib" CACHE STRING "" FORCE)
 set(ZZip_LIBRARY_REL "zziplib" CACHE STRING "" FORCE)

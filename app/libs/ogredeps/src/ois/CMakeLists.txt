@@ -68,36 +68,7 @@ if (OGRE_PROJECT_FOLDERS)
 	set_property(TARGET OIS PROPERTY FOLDER Dependencies)
 endif ()
 
-if (MINGW)
-	  # remove lib prefix from DLL outputs
-	  set_target_properties(OIS PROPERTIES PREFIX "")
-endif ()
-
 target_link_libraries(OIS ${OIS_PLATFORM_LIBS})
-install_dep(OIS include/OIS ${OIS_HEADERS})
-if (OGREDEPS_INSTALL_DEV)
-  install(FILES ${OIS_PLATFORM_HEADERS} DESTINATION include/OIS/${OIS_PLATFORM})
-endif ()
-
-if (APPLE)
-  if(OGRE_BUILD_PLATFORM_APPLE_IOS)
-    set_target_properties(OIS PROPERTIES
-      LINK_FLAGS "-framework UIKit"
-    )
-  else()
-    set_target_properties(OIS PROPERTIES
-      LINK_FLAGS "-framework IOKit -framework Cocoa -framework Carbon"
-    )
-  endif()
-endif ()
-
-if (APPLE)
- set_target_properties(OIS PROPERTIES XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO")
-
- if(OGRE_BUILD_PLATFORM_APPLE_IOS)
-  set_target_properties(OIS PROPERTIES XCODE_ATTRIBUTE_GCC_THUMB_SUPPORT "NO")
- endif()
-endif()
 
 set(OIS_INCLUDE_DIR "${OIS_SOURCE_DIR}/includes" CACHE PATH "" FORCE)
 set(OIS_LIBRARY_DBG "OIS" CACHE STRING "" FORCE)
