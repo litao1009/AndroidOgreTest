@@ -63,11 +63,27 @@ public:
 					//Ogre::Root::getSingletonPtr()->initialise(true);
 
 					//locate resources
-					Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation("Models", "APKFileSystem");
-					Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation("Materials", "APKFileSystem");
-					Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation("Materials/Programs", "APKFileSystem");
-					Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation("Textures", "APKFileSystem");
-					Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation("Particles", "APKFileSystem");
+					Ogre::ConfigFile cfg;
+					{
+						auto rscAsset = AAssetManager_open(assetMgr, "resources.cfg", AASSET_MODE_BUFFER);
+						assert(rscAsset);
+						auto length = AAsset_getLength(rscAsset);
+						auto membuf = OGRE_MALLOC(length, Ogre::MEMCATEGORY_GENERAL);
+						memcpy(membuf, AAsset_getBuffer(rscAsset), length);
+						AAsset_close(rscAsset);
+						Ogre::DataStreamPtr srcData(new Ogre::MemoryDataStream(membuf, length, true, true));
+						cfg.load(srcData);
+					}
+
+					auto sectionItor = cfg.getSectionIterator();
+					for ( auto& curSec : sectionItor )
+					{
+						auto sec = curSec.first;
+						for ( auto& curSet : *(curSec.second) )
+						{
+							Ogre::ResourceGroupManager::getSingleton().addResourceLocation(curSet.second, curSet.first, sec);
+						}
+					}
 
 					//load resources
 					Ogre::ResourceGroupManager::getSingletonPtr()->initialiseAllResourceGroups();

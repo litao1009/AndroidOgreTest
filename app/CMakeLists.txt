@@ -8,6 +8,10 @@ set(APP_GLUE_DIR
 add_library(appGlue
             STATIC
             ${APP_GLUE_DIR}/android_native_app_glue.c )
+
+target_link_libraries(appGlue
+                       android
+                       log)
 ######################################################################  appGlue
 
 
@@ -15,6 +19,9 @@ add_library(appGlue
 add_library(cpufeatures
             STATIC
             ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c )
+
+target_link_libraries(cpufeatures
+                        dl)
 
 target_include_directories(cpufeatures PRIVATE
                              ${ANDROID_NDK}/sources/android/cpufeatures/)
@@ -44,6 +51,7 @@ set( NATIVE_SOURCE
     ${NATIVE_SOURCE_DIR}/ICameraFrameListener.h
     ${NATIVE_SOURCE_DIR}/SceneListener/DummySceneListener.cpp
     ${NATIVE_SOURCE_DIR}/SceneListener/DummySceneListener.h
+    ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c
     )
 
 add_library( NativeMain SHARED
@@ -51,7 +59,8 @@ add_library( NativeMain SHARED
 
 target_include_directories(NativeMain PRIVATE
                            ${APP_GLUE_DIR}
-                           ${NATIVE_SOURCE_DIR})
+                           ${NATIVE_SOURCE_DIR}
+                           ${ANDROID_NDK}/sources/android/cpufeatures/)
 
 target_link_libraries( NativeMain
                        appGlue

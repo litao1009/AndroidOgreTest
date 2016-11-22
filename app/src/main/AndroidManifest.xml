@@ -10,7 +10,6 @@
         android:hasCode="false">
 
         <activity android:name="android.app.NativeActivity"
-            android:label="NativeActivity"
             android:configChanges="orientation|keyboardHidden">
             <meta-data android:name="android.app.lib_name"
                 android:value="NativeMain"></meta-data>
