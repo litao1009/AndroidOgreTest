@@ -6,19 +6,20 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:hasCode="false">
+        android:theme="@style/AppTheme">
 
-        <activity android:name="android.app.NativeActivity"
+        <activity android:name=".OgreActivity"
             android:configChanges="orientation|keyboardHidden">
             <meta-data android:name="android.app.lib_name"
                 android:value="NativeMain"></meta-data>
+        </activity>
+
+        <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
