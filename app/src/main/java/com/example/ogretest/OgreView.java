@@ -35,9 +35,7 @@ public class OgreView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder){
 
-        Canvas canvas = holder.lockCanvas();
-        onDraw(canvas);
-        holder.unlockCanvasAndPost(canvas);
+        JavaBridge.OnSurfaceCreated(holder.getSurface());
     }
 
     @Override

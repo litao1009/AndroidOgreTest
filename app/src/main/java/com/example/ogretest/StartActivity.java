@@ -14,6 +14,6 @@ public class StartActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_activity_layout);
 
-        JavaBridge.InitNative();
+        JavaBridge.InitNative(getAssets());
     }
 }

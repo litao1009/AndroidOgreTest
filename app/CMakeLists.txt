@@ -8,11 +8,14 @@ set( NATIVE_SOURCE_DIR
 
 set( NATIVE_SOURCE
     ${NATIVE_SOURCE_DIR}/JNIBridge.cpp
+    ${NATIVE_SOURCE_DIR}/IEvent.cpp
     ${NATIVE_SOURCE_DIR}/IEvent.h
+    ${NATIVE_SOURCE_DIR}/IEventFwd.h
     ${NATIVE_SOURCE_DIR}/EventQueue.h
     ${NATIVE_SOURCE_DIR}/EventQueue.cpp
     ${NATIVE_SOURCE_DIR}/NativeBridge.h
     ${NATIVE_SOURCE_DIR}/NativeBridge.cpp
+    ${NATIVE_SOURCE_DIR}/Event/SysEvent.h
     )
 
 list(APPEND

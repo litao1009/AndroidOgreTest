@@ -1,6 +1,10 @@
 #pragma once
 
+#include "IEventFwd.h"
+
 #include <memory>
+
+struct AAssetManager;
 
 class NativeBridge
 {
@@ -19,7 +23,9 @@ public:
 
 public:
 
-	void	Init();
+	void	Init(AAssetManager* assetMgr);
 
 	void	UnInit();
+
+	void	PostEvent(const IEventSPtr& evt);
 };

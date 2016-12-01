@@ -1,13 +1,18 @@
 #pragma once
 
-#include <memory>
-
 #include "IEvent.h"
+
+#include <memory>
+#include <list>
 
 class EventQueue
 {
 	class	Imp;
 	std::unique_ptr<Imp>	ImpUPtr_;
+
+public:
+
+	using	EventList = std::list<IEventSPtr >;
 
 public:
 
@@ -21,9 +26,9 @@ public:
 
 	void	PushEvent(const IEventSPtr& event);
 
-	IEventSPtr	PopEvent();
+	IEventSPtr	PopEvent(bool block);
 
-	IEventSPtr 	PopEventNonBlock();
+	EventList	PopAllEvent(bool block);
 
 	bool	Start();
 

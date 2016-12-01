@@ -10,7 +10,7 @@ class EventQueue::Imp
 {
 public:
 
-	std::list<IEventSPtr>		Queue_;
+	EventList					Queue_;
 
 	std::atomic_uint_least32_t	MaxSize_{1000};
 	std::atomic_bool			StopFlag_{true};
@@ -54,48 +54,76 @@ void EventQueue::PushEvent(const IEventSPtr& event)
 	imp_.EmptyCondition_.notify_one();
 }
 
-IEventSPtr EventQueue::PopEvent()
+IEventSPtr EventQueue::PopEvent(bool block)
 {
 	auto& imp_ = *ImpUPtr_;
-
-	std::unique_lock<std::mutex> lock(imp_.Mutex_);
-
-	while ( imp_.Queue_.empty() && !imp_.StopFlag_ )
-	{
-		imp_.EmptyCondition_.wait(lock);
-	}
 
 	if ( imp_.StopFlag_ )
 	{
 		return nullptr;
 	}
 
-	auto event = imp_.Queue_.back();
-	imp_.Queue_.pop_back();
+	IEventSPtr event;
+	{
+		std::unique_lock<std::mutex> lock(imp_.Mutex_);
+
+		if ( block )
+		{
+			while ( imp_.Queue_.empty() && !imp_.StopFlag_ )
+			{
+				imp_.EmptyCondition_.wait(lock);
+			}
+
+			event = imp_.Queue_.back();
+			imp_.Queue_.pop_back();
+		}
+		else
+		{
+			if ( imp_.Queue_.empty() )
+			{
+				return nullptr;
+			}
+
+			event = imp_.Queue_.back();
+			imp_.Queue_.pop_back();
+		}
+	}
+
+	imp_.FullCondition_.notify_one();
 
 	return event;
 }
 
-IEventSPtr EventQueue::PopEventNonBlock()
+EventQueue::EventList EventQueue::PopAllEvent(bool block)
 {
 	auto& imp_ = *ImpUPtr_;
 
 	if ( imp_.StopFlag_ )
 	{
-		return nullptr;
+		return {};
 	}
 
-	std::unique_lock<std::mutex> lock(imp_.Mutex_);
-
-	if ( imp_.Queue_.empty() )
+	EventList tmp;
 	{
-		return nullptr;
+		std::unique_lock<std::mutex> lock(imp_.Mutex_);
+
+		if ( block )
+		{
+			while ( imp_.Queue_.empty() && !imp_.StopFlag_ )
+			{
+				imp_.EmptyCondition_.wait(lock);
+			}
+		}
+
+		{
+			using namespace std;
+			swap(tmp, imp_.Queue_);
+		}
 	}
 
-	auto event = imp_.Queue_.back();
-	imp_.Queue_.pop_back();
+	imp_.FullCondition_.notify_all();
 
-	return event;
+	return tmp;
 }
 
 bool EventQueue::Start()
