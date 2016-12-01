@@ -22,6 +22,7 @@
 #include <unordered_map>
 
 #include <android/log.h>
+#include <android/input.h>
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "Test", __VA_ARGS__))
 
@@ -71,10 +72,6 @@ public:
 			{
 				OgreEnv::GetInstance().RenderOneFrame();
 			}
-
-			std::stringstream ss;
-			ss << std::this_thread::get_id();
-			LOGI("%s", ss.str().c_str());
 		}
 	}
 };
@@ -143,6 +140,49 @@ NativeBridge::NativeBridge():ImpUPtr_(new Imp())
 		}
 
 		AConfiguration_delete(config);
+	});
+
+	imp_.EventDispathMap_.emplace(SysEVT_MotionTouch::GetStaticTypeID(), [&imp_](const IEventSPtr& evt)
+	{
+		auto sysEvt = SysEVT_MotionTouch::CastFrom(evt);
+
+		PointerState ps;
+
+		switch (sysEvt->Source)
+		{
+		case AINPUT_SOURCE_TOUCHSCREEN:
+		{
+			ps.X.rel = sysEvt->X;
+			ps.Y.rel = sysEvt->Y;
+			ps.X.abs = sysEvt->RawX;
+			ps.Y.abs = sysEvt->RawY;
+			ps.width = imp_.MainWnd_->getWidth();
+			ps.height = imp_.MainWnd_->getHeight();
+
+			switch ( sysEvt->Action )
+			{
+			case AMOTION_EVENT_ACTION_DOWN:
+			{
+				ps.State_ = PointerState::ES_Pressed;
+			}
+				break;
+			case AMOTION_EVENT_ACTION_UP:
+			{
+				ps.State_ = PointerState::ES_Released;
+			}
+				break;
+			case AMOTION_EVENT_ACTION_MOVE:
+			{
+				ps.State_ = PointerState::ES_Moved;
+			}
+				break;
+			}
+
+			OgreEnv::GetInstance().OnInputEvent(ps);
+		}
+		default:
+			break;
+		}
 	});
 }
 

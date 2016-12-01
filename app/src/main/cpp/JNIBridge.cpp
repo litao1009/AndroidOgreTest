@@ -21,3 +21,18 @@ extern "C" void JNICALL Java_com_example_ogretest_JavaBridge_OnSurfaceCreated( J
 
 	NativeBridge::GetInstance().PostEvent(sysEvt);
 }
+
+
+extern "C" void JNICALL Java_com_example_ogretest_JavaBridge_OnTouchEvent( JNIEnv *env, jobject /* this */,
+																			   int source, int action, float x, float y, float rawX, float rawY)
+{
+	auto sysEvt = SysEVT_MotionTouch::Create();
+	sysEvt->Source = source;
+	sysEvt->Action = action;
+	sysEvt->X = x;
+	sysEvt->Y = y;
+	sysEvt->RawX = rawX;
+	sysEvt->RawY = rawY;
+
+	NativeBridge::GetInstance().PostEvent(sysEvt);
+}
