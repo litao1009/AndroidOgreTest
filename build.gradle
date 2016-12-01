@@ -1,4 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+task printGradleVersion {
+    // Get current Gradle version as object.
+    final GradleVersion gradleVersion = GradleVersion.current()
+
+    // Print different properties.
+    println "Your Gradle version is ${gradleVersion.version}"
+}
 
 buildscript {
     repositories {

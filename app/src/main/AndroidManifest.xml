@@ -8,12 +8,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".OgreActivity"
-            android:configChanges="orientation|keyboardHidden">
-            <meta-data android:name="android.app.lib_name"
-                android:value="NativeMain"></meta-data>
-        </activity>
-
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>

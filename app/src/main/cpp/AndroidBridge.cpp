@@ -32,94 +32,104 @@ public:
 	{
 		switch (cmd)
 		{
-			case APP_CMD_SAVE_STATE:
-				break;
-			case APP_CMD_INIT_WINDOW:
-			{
-				auto& imp_ = *(AndroidBridge::GetInstance().ImpUPtr_);
+		case APP_CMD_SAVE_STATE:
+			break;
+		case APP_CMD_START:
+		{
+			auto i = 0;
+		}
+		break;
+		case APP_CMD_INIT_WINDOW:
+		{
+			auto& imp_ = *(AndroidBridge::GetInstance().ImpUPtr_);
 
-				if ( nullptr == imp_.AndroidApp_ || nullptr == Ogre::Root::getSingletonPtr())
+			if ( nullptr == imp_.AndroidApp_ || nullptr == Ogre::Root::getSingletonPtr())
+			{
+				break;
+			}
+
+			auto config = AConfiguration_new();
+			AConfiguration_fromAssetManager(config, imp_.AndroidApp_->activity->assetManager);
+
+			if ( nullptr == imp_.MainWnd_ )
+			{
+				Ogre::NameValuePairList opt;
+				opt["externalWindowHandle"] = std::to_string(reinterpret_cast<size_t>(imp_.AndroidApp_->window));
+				opt["androidConfig"] = std::to_string(reinterpret_cast<size_t>(config));
+
+				imp_.MainWnd_ = Ogre::Root::getSingletonPtr()->createRenderWindow("MainWnd", 0, 0, false, &opt);
+
+				//input
+
+				auto assetMgr = imp_.AndroidApp_->activity->assetManager;
+				Ogre::ArchiveManager::getSingleton().addArchiveFactory(new Ogre::APKFileSystemArchiveFactory(assetMgr));
+				Ogre::ArchiveManager::getSingleton().addArchiveFactory(new Ogre::APKZipArchiveFactory(assetMgr));
+
+				//Ogre::Root::getSingletonPtr()->initialise(true);
+
+				//locate resources
+				Ogre::ConfigFile cfg;
 				{
-					break;
+					auto rscAsset = AAssetManager_open(assetMgr, "resources.cfg", AASSET_MODE_BUFFER);
+					assert(rscAsset);
+					auto length = AAsset_getLength(rscAsset);
+					auto membuf = OGRE_MALLOC(length, Ogre::MEMCATEGORY_GENERAL);
+					memcpy(membuf, AAsset_getBuffer(rscAsset), length);
+					AAsset_close(rscAsset);
+					Ogre::DataStreamPtr srcData(new Ogre::MemoryDataStream(membuf, length, true, true));
+					cfg.load(srcData);
 				}
 
-				auto config = AConfiguration_new();
-				AConfiguration_fromAssetManager(config, imp_.AndroidApp_->activity->assetManager);
-
-				if ( nullptr == imp_.MainWnd_ )
+				auto sectionItor = cfg.getSectionIterator();
+				for ( auto& curSec : sectionItor )
 				{
-					Ogre::NameValuePairList opt;
-					opt["externalWindowHandle"] = std::to_string(reinterpret_cast<size_t>(imp_.AndroidApp_->window));
-					opt["androidConfig"] = std::to_string(reinterpret_cast<size_t>(config));
-
-					imp_.MainWnd_ = Ogre::Root::getSingletonPtr()->createRenderWindow("MainWnd", 0, 0, false, &opt);
-
-					//input
-
-					auto assetMgr = imp_.AndroidApp_->activity->assetManager;
-					Ogre::ArchiveManager::getSingleton().addArchiveFactory(new Ogre::APKFileSystemArchiveFactory(assetMgr));
-					Ogre::ArchiveManager::getSingleton().addArchiveFactory(new Ogre::APKZipArchiveFactory(assetMgr));
-
-					//Ogre::Root::getSingletonPtr()->initialise(true);
-
-					//locate resources
-					Ogre::ConfigFile cfg;
+					auto sec = curSec.first;
+					for ( auto& curSet : *(curSec.second) )
 					{
-						auto rscAsset = AAssetManager_open(assetMgr, "resources.cfg", AASSET_MODE_BUFFER);
-						assert(rscAsset);
-						auto length = AAsset_getLength(rscAsset);
-						auto membuf = OGRE_MALLOC(length, Ogre::MEMCATEGORY_GENERAL);
-						memcpy(membuf, AAsset_getBuffer(rscAsset), length);
-						AAsset_close(rscAsset);
-						Ogre::DataStreamPtr srcData(new Ogre::MemoryDataStream(membuf, length, true, true));
-						cfg.load(srcData);
+						Ogre::ResourceGroupManager::getSingleton().addResourceLocation(curSet.second, curSet.first, sec);
 					}
-
-					auto sectionItor = cfg.getSectionIterator();
-					for ( auto& curSec : sectionItor )
-					{
-						auto sec = curSec.first;
-						for ( auto& curSet : *(curSec.second) )
-						{
-							Ogre::ResourceGroupManager::getSingleton().addResourceLocation(curSet.second, curSet.first, sec);
-						}
-					}
-
-					//load resources
-					Ogre::ResourceGroupManager::getSingletonPtr()->initialiseAllResourceGroups();
-
-					auto dummyScene = std::make_shared<DummySceneListener>(imp_.MainWnd_);
-					OgreEnv::GetInstance().AddFrameListener(dummyScene);
-
-					Ogre::Root::getSingletonPtr()->getRenderSystem()->_initRenderTargets();
-
-					Ogre::Root::getSingletonPtr()->clearEventTimes();
-				}
-				else
-				{
-					static_cast<Ogre::AndroidEGLWindow*>(imp_.MainWnd_)->_createInternalResources(imp_.AndroidApp_->window, config);
 				}
 
-				AConfiguration_delete(config);
+				//load resources
+				Ogre::ResourceGroupManager::getSingletonPtr()->initialiseAllResourceGroups();
+
+				auto dummyScene = std::make_shared<DummySceneListener>(imp_.MainWnd_);
+				OgreEnv::GetInstance().AddFrameListener(dummyScene);
+
+				Ogre::Root::getSingletonPtr()->getRenderSystem()->_initRenderTargets();
+
+				Ogre::Root::getSingletonPtr()->clearEventTimes();
 			}
-				break;
-			case APP_CMD_TERM_WINDOW:
+			else
 			{
-				auto& imp_ = *(AndroidBridge::GetInstance().ImpUPtr_);
-
-				if ( nullptr != Ogre::Root::getSingletonPtr() && nullptr != imp_.MainWnd_)
-				{
-					static_cast<Ogre::AndroidEGLWindow*>(imp_.MainWnd_)->_destroyInternalResources();
-				}
-
-				AndroidBridge::GetInstance().Shutdown();
+				static_cast<Ogre::AndroidEGLWindow*>(imp_.MainWnd_)->_createInternalResources(imp_.AndroidApp_->window, config);
 			}
-				break;
-			case APP_CMD_DESTROY:
+
+			AConfiguration_delete(config);
+		}
+			break;
+		case APP_CMD_TERM_WINDOW:
+		{
+			auto& imp_ = *(AndroidBridge::GetInstance().ImpUPtr_);
+
+			if ( nullptr != Ogre::Root::getSingletonPtr() && nullptr != imp_.MainWnd_)
 			{
-
+				static_cast<Ogre::AndroidEGLWindow*>(imp_.MainWnd_)->_destroyInternalResources();
 			}
-				break;
+
+			AndroidBridge::GetInstance().Shutdown();
+		}
+			break;
+		case APP_CMD_WINDOW_RESIZED:
+		{
+			int i = 0;
+		}
+			break;
+		case APP_CMD_DESTROY:
+		{
+
+		}
+			break;
 		}
 	}
 

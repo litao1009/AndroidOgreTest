@@ -1,31 +1,25 @@
 cmake_minimum_required(VERSION 3.4.1)
 
 
-######################################################################  appGlue
-set(APP_GLUE_DIR
-    "${ANDROID_NDK}/sources/android/native_app_glue")
-
-add_library(AppGlue
-            STATIC
-            ${APP_GLUE_DIR}/android_native_app_glue.c )
-
-target_link_libraries(AppGlue
-                       android
-                       log)
-######################################################################  appGlue
-
-
 ######################################################################  NativeMain
 set( NATIVE_SOURCE_DIR
      src/main/cpp
      )
 
 set( NATIVE_SOURCE
+    ${NATIVE_SOURCE_DIR}/JNIBridge.cpp
+    ${NATIVE_SOURCE_DIR}/IEvent.h
+    ${NATIVE_SOURCE_DIR}/EventQueue.h
+    ${NATIVE_SOURCE_DIR}/EventQueue.cpp
+    ${NATIVE_SOURCE_DIR}/NativeBridge.h
+    ${NATIVE_SOURCE_DIR}/NativeBridge.cpp
+    )
+
+list(APPEND
+    NATIVE_SOURCE
+
     ${NATIVE_SOURCE_DIR}/Camera/MayaCamera.cpp
     ${NATIVE_SOURCE_DIR}/Camera/MayaCamera.h
-    ${NATIVE_SOURCE_DIR}/NativeMain.cpp
-    ${NATIVE_SOURCE_DIR}/AndroidBridge.cpp
-    ${NATIVE_SOURCE_DIR}/AndroidBridge.h
     ${NATIVE_SOURCE_DIR}/OgreEnv.cpp
     ${NATIVE_SOURCE_DIR}/OgreEnv.h
     ${NATIVE_SOURCE_DIR}/InputEvent.cpp
@@ -44,12 +38,10 @@ add_library( NativeMain SHARED
              ${NATIVE_SOURCE} )
 
 target_include_directories(NativeMain PRIVATE
-                           ${APP_GLUE_DIR}
                            ${NATIVE_SOURCE_DIR}
                            )
 
 target_link_libraries( NativeMain
-                       AppGlue
                        android
                        log
                        )
