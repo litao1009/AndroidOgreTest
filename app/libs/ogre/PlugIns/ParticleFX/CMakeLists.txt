@@ -23,9 +23,3 @@ if (NOT OGRE_STATIC)
     COMPILE_DEFINITIONS OGRE_PARTICLEFXPLUGIN_EXPORTS
   ) 
 endif ()
-
-ogre_config_framework(Plugin_ParticleFX)
-
-ogre_config_plugin(Plugin_ParticleFX)
-install(FILES ${HEADER_FILES} DESTINATION include/OGRE/Plugins/ParticleFX)
-

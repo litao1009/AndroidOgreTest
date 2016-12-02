@@ -57,15 +57,7 @@ else ()
   set(OGRE_PLATFORM_X64 FALSE)
 endif ()
 
-# determine system endianess
-if (MSVC OR ANDROID OR EMSCRIPTEN)
-  # This doesn't work on VS 2010
-  # MSVC only builds for intel anyway
-  set(OGRE_TEST_BIG_ENDIAN FALSE)
-else()
-  include(TestBigEndian)
-  test_big_endian(OGRE_TEST_BIG_ENDIAN)
-endif()
+set(OGRE_TEST_BIG_ENDIAN FALSE)
 
 # Add OgreMain include path
 include_directories("${OGRE_SOURCE_DIR}/OgreMain/include")
@@ -106,7 +98,7 @@ elseif (ANDROID)
 
   set(OGRE_BUILD_TESTS FALSE CACHE BOOL "Disable tests on Android" FORCE)
   set(OGRE_BUILD_TOOLS FALSE CACHE BOOL "Disable tools on Android" FORCE)
-  set(OGRE_STATIC TRUE CACHE BOOL "Forcing static build for Android" FORCE)
+#  set(OGRE_STATIC TRUE CACHE BOOL "Forcing static build for Android" FORCE)
   set(OGRE_SIMD FALSE CACHE BOOL "Disable SIMD on Android" FORCE)
   set(OGRE_RESTRICT_ALIASING FALSE CACHE BOOL "Disable strict aliasing on Android" FORCE)
   string (REPLACE "-msse2" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")

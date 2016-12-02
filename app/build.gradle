@@ -48,7 +48,8 @@ android {
                         "-DOGRE_LEGACY_ANIMATIONS:BOOL=ON",
                         "-DOGRE_RESTRICT_ALIASING:BOOL=ON",
                         "-DOGRE_SIMD_NEON:BOOL=OFF",
-                        "-DOGRE_SIMD_SSE2:BOOL=OFF"
+                        "-DOGRE_SIMD_SSE2:BOOL=OFF",
+                        "-DOGRE_STATIC:BOOL=OFF"
             }
         }
     }

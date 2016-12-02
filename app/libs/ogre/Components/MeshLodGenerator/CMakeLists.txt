@@ -28,14 +28,3 @@ include_directories(${OGRE_SOURCE_DIR}/OgreMain/include)
 ogre_add_library(OgreMeshLodGenerator ${OGRE_COMP_LIB_TYPE} ${HEADER_FILES} ${SOURCE_FILES} ${PLATFORM_HEADER_FILES} ${PLATFORM_SOURCE_FILES})
 set_target_properties(OgreMeshLodGenerator PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
 target_link_libraries(OgreMeshLodGenerator OgreMain)
-if (OGRE_CONFIG_THREADS)
-  target_link_libraries(OgreMeshLodGenerator ${OGRE_THREAD_LIBRARIES})
-endif ()
-
-# install 
-ogre_config_framework(OgreMeshLodGenerator)
-ogre_config_component(OgreMeshLodGenerator)
-
-install(FILES ${HEADER_FILES}
-  DESTINATION include/OGRE/MeshLodGenerator
-)

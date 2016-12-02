@@ -76,11 +76,3 @@ if (NOT OGRE_STATIC)
     COMPILE_DEFINITIONS OGRE_GLESPLUGIN_EXPORTS
   )
 endif ()
-
-if (OGRE_CONFIG_THREADS)
-  target_link_libraries(RenderSystem_GLES ${OGRE_THREAD_LIBRARIES})
-endif ()
-
-ogre_config_plugin(RenderSystem_GLES)
-install(FILES ${HEADER_FILES} DESTINATION include/OGRE/RenderSystems/GLES)
-install(FILES ${PLATFORM_HEADERS} DESTINATION include/OGRE/RenderSystems/GLES/${PLATFORM_HEADER_INSTALL})

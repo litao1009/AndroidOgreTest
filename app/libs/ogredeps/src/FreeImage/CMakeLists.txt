@@ -531,7 +531,7 @@ include_directories(Source/OpenEXR/Imath)
 include_directories(Source/ZLib)
 
 add_definitions(-DOPJ_STATIC -DLIBRAW_NODLL -DLIBRAW_LIBRARY_BUILD -DFREEIMAGE_LIB -DNO_LCMS)
-add_library(FreeImage STATIC ${FreeImage_SOURCES})
+add_library(FreeImage SHARED ${FreeImage_SOURCES})
 if (OGRE_PROJECT_FOLDERS)
 	set_property(TARGET FreeImage PROPERTY FOLDER Dependencies)
 endif ()
