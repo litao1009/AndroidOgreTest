@@ -86,18 +86,6 @@ macro_log_feature(OPENGLES3_FOUND "OpenGL ES 3.x" "Support for the OpenGL ES 2.x
 find_package(OIS)
 macro_log_feature(OIS_FOUND "OIS" "Input library needed for the samples" "http://sourceforge.net/projects/wgois" FALSE "" "")
 
-#######################################################################
-# Tools
-#######################################################################
-
-
-#######################################################################
-# Tests
-#######################################################################
-
-find_package(CppUnit)
-macro_log_feature(CppUnit_FOUND "CppUnit" "Library for performing unit tests" "http://cppunit.sourceforge.net" FALSE "" "")
-
 # now see if we have a buildable Dependencies package in
 # the source tree. If so, include that, and it will take care of
 # setting everything up, including overriding any of the above
