@@ -36,7 +36,7 @@ public class OgreView extends SurfaceView implements SurfaceHolder.Callback {
         float y = evt.getY();
         float rx = evt.getRawX();
         float ry = evt.getRawY();
-        JavaBridge.OnTouchEvent(source, action, x, y, rx, ry);
+        RenderEngine.OnTouchEvent(source, action, x, y, rx, ry);
 
         return true;
     }
@@ -44,7 +44,7 @@ public class OgreView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder){
 
-        JavaBridge.OnSurfaceCreated(holder.getSurface());
+        RenderEngine.OnSurfaceCreated(holder.getSurface());
     }
 
     @Override

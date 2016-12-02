@@ -6,14 +6,14 @@
 #include <android/asset_manager_jni.h>
 #include <android/native_window_jni.h>
 
-extern "C" void JNICALL Java_com_example_ogretest_JavaBridge_InitNative( JNIEnv *env, jobject /* this */,
+extern "C" void JNICALL Java_com_example_ogretest_RenderEngine_InitNative( JNIEnv *env, jobject /* this */,
 																		 jobject jAssetMgr)
 {
 	auto assetManager = AAssetManager_fromJava(env, jAssetMgr);
 	NativeBridge::GetInstance().Init(assetManager);
 }
 
-extern "C" void JNICALL Java_com_example_ogretest_JavaBridge_OnSurfaceCreated( JNIEnv *env, jobject /* this */,
+extern "C" void JNICALL Java_com_example_ogretest_RenderEngine_OnSurfaceCreated( JNIEnv *env, jobject /* this */,
 																		 jobject surface)
 {
 	auto sysEvt = SysEVT_SufaceCreated::Create();
@@ -23,7 +23,7 @@ extern "C" void JNICALL Java_com_example_ogretest_JavaBridge_OnSurfaceCreated( J
 }
 
 
-extern "C" void JNICALL Java_com_example_ogretest_JavaBridge_OnTouchEvent( JNIEnv *env, jobject /* this */,
+extern "C" void JNICALL Java_com_example_ogretest_RenderEngine_OnTouchEvent( JNIEnv *env, jobject /* this */,
 																			   int source, int action, float x, float y, float rawX, float rawY)
 {
 	auto sysEvt = SysEVT_MotionTouch::Create();

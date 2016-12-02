@@ -3,7 +3,7 @@ package com.example.ogretest;
 import android.content.res.AssetManager;
 import android.view.Surface;
 
-public class JavaBridge {
+public class RenderEngine {
 
     public static native void InitNative(AssetManager assetMgr);
 

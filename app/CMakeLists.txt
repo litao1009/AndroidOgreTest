@@ -7,7 +7,6 @@ set( NATIVE_SOURCE_DIR
      )
 
 set( NATIVE_SOURCE
-    ${NATIVE_SOURCE_DIR}/JNIBridge.cpp
     ${NATIVE_SOURCE_DIR}/IEvent.cpp
     ${NATIVE_SOURCE_DIR}/IEvent.h
     ${NATIVE_SOURCE_DIR}/IEventFwd.h
@@ -15,6 +14,15 @@ set( NATIVE_SOURCE
     ${NATIVE_SOURCE_DIR}/EventQueue.cpp
     ${NATIVE_SOURCE_DIR}/NativeBridge.h
     ${NATIVE_SOURCE_DIR}/NativeBridge.cpp
+    )
+
+list(APPEND
+    NATIVE_SOURCE
+    ${NATIVE_SOURCE_DIR}/JNI/JNI_RenderEngine.cpp
+    )
+
+list(APPEND
+    NATIVE_SOURCE
     ${NATIVE_SOURCE_DIR}/Event/SysEvent.h
     )
 
@@ -33,6 +41,10 @@ list(APPEND
     ${NATIVE_SOURCE_DIR}/IFrameListenerFwd.h
     ${NATIVE_SOURCE_DIR}/ICameraFrameListener.cpp
     ${NATIVE_SOURCE_DIR}/ICameraFrameListener.h
+    )
+
+list(APPEND
+    NATIVE_SOURCE
     ${NATIVE_SOURCE_DIR}/SceneListener/DummySceneListener.cpp
     ${NATIVE_SOURCE_DIR}/SceneListener/DummySceneListener.h
     )
